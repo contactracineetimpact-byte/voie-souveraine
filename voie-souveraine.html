@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Voie Souveraine — Outils</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#f7f2e8;--green:#1a3a2a;--gold:#b8922a;--gold-light:#c9a84c;--cream:#1a0e04;--gray:#4a3a20;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--dark);color:var(--cream);font-family:'Barlow',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.3;}
+.amb{position:fixed;width:600px;height:600px;border-radius:50%;pointer-events:none;}
+.amb1{background:radial-gradient(circle,rgba(184,146,42,0.08) 0%,transparent 70%);top:-200px;left:-200px;animation:d1 20s ease-in-out infinite alternate;}
+.amb2{background:radial-gradient(circle,rgba(150,120,60,0.06) 0%,transparent 70%);bottom:-200px;right:-100px;animation:d2 25s ease-in-out infinite alternate;}
+@keyframes d1{to{transform:translate(100px,80px);}}
+@keyframes d2{to{transform:translate(-80px,-60px);}}
+.screen{display:none;min-height:100vh;animation:fi 0.8s ease;}
+.screen.active{display:flex;flex-direction:column;}
+@keyframes fi{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+#home{align-items:center;justify-content:center;text-align:center;padding:40px 24px;background:linear-gradient(160deg,#f7f2e8 0%,#ede6d8 40%,#f0e8d8 100%);}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,8vw,64px);font-weight:400;letter-spacing:0.05em;line-height:1.1;margin-bottom:8px;color:#1a0e04;}
+h1 span{color:#b8922a;font-style:italic;}
+.tagline{font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#4a3a20;margin-bottom:32px;}
+.gold-line{width:60px;height:1px;background:linear-gradient(90deg,transparent,#b8922a,transparent);margin:0 auto 32px;}
+.nav-card{background:#1a3a2a;border:1px solid rgba(184,146,42,0.35);border-radius:16px;padding:24px;cursor:pointer;transition:all 0.3s;text-align:left;position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.1);}
+.nav-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);transform:scaleX(0);transition:transform 0.3s;}
+.nav-card:hover{background:#2d5016;border-color:rgba(201,168,76,0.6);transform:translateY(-3px);}
+.nav-card:hover::before{transform:scaleX(1);}
+.card-icon{font-size:28px;margin-bottom:10px;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:#e2c97e;margin-bottom:6px;}
+.card-desc{font-size:13px;color:rgba(247,242,232,0.85);line-height:1.5;}
+.card-time{font-size:11px;color:rgba(201,168,76,0.7);margin-top:10px;letter-spacing:0.1em;text-transform:uppercase;}
+.back-btn{position:fixed;top:24px;left:24px;z-index:100;background:rgba(247,242,232,0.9);border:1px solid rgba(184,146,42,0.3);border-radius:8px;padding:10px 16px;color:#4a3a20;font-family:'Barlow',sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(10px);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.back-btn:hover{color:#8a6a1a;border-color:rgba(184,146,42,0.6);}
+.inner{padding:80px 24px 60px;max-width:640px;margin:0 auto;width:100%;background:#f7f2e8;}
+.step-indicator{display:flex;gap:6px;justify-content:center;margin-bottom:48px;}
+.step-dot{width:6px;height:6px;border-radius:50%;background:rgba(184,146,42,0.2);transition:all 0.3s;}
+.step-dot.active{background:#b8922a;width:24px;border-radius:3px;}
+.step-dot.done{background:rgba(184,146,42,0.5);}
+.step-block{display:none;animation:fi 0.6s ease;}
+.step-block.active{display:block;}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;color:rgba(184,146,42,0.15);line-height:1;margin-bottom:-20px;}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,6vw,42px);font-weight:400;color:#8a6a1a;margin-bottom:8px;line-height:1.2;}
+.step-subtitle{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#4a3a20;margin-bottom:32px;font-weight:500;}
+.obj-display{background:rgba(184,146,42,0.08);border:1px solid rgba(184,146,42,0.3);border-radius:12px;padding:16px 20px;margin-bottom:24px;}
+.obj-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#8a6a1a;margin-bottom:6px;}
+.obj-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:#1a0e04;line-height:1.5;}
+.instr{background:#1a3a2a;border-left:3px solid #c9a84c;border-radius:0 12px 12px 0;padding:20px 20px 20px 24px;margin-bottom:24px;font-size:16px;line-height:1.8;color:#f7f2e8;}
+.qblock{background:#fff8f0;border:1px solid rgba(184,146,42,0.2);border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 6px rgba(184,146,42,0.06);}
+.qlabel{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#5a3e0e;margin-bottom:10px;font-weight:600;}
+.qtext{font-family:'Cormorant Garamond',serif;font-size:20px;color:#1a0e04;line-height:1.5;font-style:italic;}
+.res-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.rb{width:40px;height:40px;border-radius:8px;border:1px solid rgba(184,146,42,0.25);background:#fff8f0;color:#4a3a20;font-size:14px;cursor:pointer;transition:all 0.2s;font-family:'Barlow',sans-serif;}
+.rb:hover,.rb.sel{background:rgba(184,146,42,0.15);border-color:#b8922a;color:#8a6a1a;}
+.ta{width:100%;background:#fff8f0;border:1px solid rgba(184,146,42,0.25);border-radius:12px;padding:16px 20px;color:#1a0e04;font-family:'Barlow',sans-serif;font-size:14px;resize:none;margin-top:12px;outline:none;transition:border-color 0.2s;}
+.ta:focus{border-color:rgba(184,146,42,0.6);}
+.ta::placeholder{color:rgba(74,58,32,0.55);}
+.anchor{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,3vw,20px);color:#3a2a0e;text-align:center;line-height:1.7;padding:24px;border-top:1px solid rgba(184,146,42,0.2);border-bottom:1px solid rgba(184,146,42,0.2);margin:24px 0;}
+.breath-wrap{background:#1a3a2a;border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:24px;margin:24px 0;text-align:center;}
+.bcircle{width:140px;height:140px;border-radius:50%;border:2px solid rgba(201,168,76,0.4);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;color:#e2c97e;transition:all 0.6s ease;}
+.bcircle.inhale{transform:scale(1.15);border-color:rgba(201,168,76,0.9);box-shadow:0 0 40px rgba(201,168,76,0.25);}
+.bcircle.hold{transform:scale(1.15);border-color:rgba(201,168,76,0.5);}
+.bcircle.exhale{transform:scale(0.85);border-color:rgba(201,168,76,0.2);box-shadow:none;}
+.bphase{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(247,242,232,0.8);margin-bottom:8px;}
+.bcount{font-family:'Cormorant Garamond',serif;font-size:48px;color:#e2c97e;line-height:1;min-height:56px;}
+.wave-vis{background:rgba(45,80,22,0.5);border-radius:10px;padding:16px;margin:16px 0;}
+.wave-bars{display:flex;flex-direction:column;align-items:center;gap:5px;margin:8px 0;}
+.wbar{height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(201,168,76,0.8),rgba(201,168,76,0.3));transition:all 0.8s ease;}
+.wave-labels{display:flex;justify-content:space-between;font-size:10px;color:rgba(247,242,232,0.7);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
+.wave-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:#e2c97e;margin-top:6px;}
+.cycle-count{font-size:11px;color:rgba(247,242,232,0.7);letter-spacing:0.1em;text-transform:uppercase;margin-top:16px;}
+.timer-wrap{text-align:center;margin:24px 0;}
+.timer-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:#b8922a;line-height:1;}
+.timer-lbl{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:#4a3a20;font-weight:500;}
+.med-box{background:#1a3a2a;border:1px solid rgba(201,168,76,0.35);border-radius:16px;padding:24px;margin:24px 0;text-align:center;}
+.med-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:#e2c97e;margin-bottom:8px;}
+.med-desc{font-size:13px;color:rgba(247,242,232,0.85);line-height:1.6;margin-bottom:20px;}
+.med-placeholder{background:rgba(10,26,16,0.4);border:1px dashed rgba(201,168,76,0.3);border-radius:10px;padding:20px;font-size:12px;color:rgba(247,242,232,0.8);font-style:italic;margin-bottom:16px;line-height:1.7;}
+audio{width:100%;margin-bottom:16px;accent-color:#c9a84c;}
+.delta-box{background:#fffaf4;border:1px solid rgba(138,106,26,0.2);border-radius:12px;padding:20px;margin:0 auto 24px;max-width:340px;}
+.delta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.delta-lbl{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#6b5e4a;}
+.delta-val{font-family:'Cormorant Garamond',serif;font-size:32px;color:#8a6a1a;}
+.delta-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:#3a2a0e;margin-top:12px;line-height:1.6;}
+.btn-p{background:linear-gradient(135deg,#b8922a,#c9a84c);color:#fff;border:none;border-radius:12px;padding:16px 32px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;width:100%;margin-top:24px;box-shadow:0 4px 16px rgba(184,146,42,0.3);}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,146,42,0.4);}
+.btn-s{background:transparent;color:#4a3a20;border:1px solid rgba(74,58,32,0.3);border-radius:12px;padding:14px 28px;font-family:'Barlow',sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;width:100%;margin-top:12px;}
+.btn-s:hover{color:#1a0e04;border-color:rgba(74,58,32,0.6);}
+.btn-start{display:inline-flex;align-items:center;gap:10px;background:rgba(184,146,42,0.1);border:1px solid rgba(184,146,42,0.35);border-radius:10px;padding:12px 20px;color:#8a6a1a;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:16px;}
+.btn-start:hover{background:rgba(184,146,42,0.2);}
+.vol-control{display:flex;align-items:center;gap:10px;margin:16px 0 8px;padding:12px 16px;background:#fff8f0;border-radius:10px;border:1px solid rgba(184,146,42,0.2);}
+.vol-slider{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:linear-gradient(90deg,#b8922a 25%,rgba(184,146,42,0.2) 25%);outline:none;cursor:pointer;}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#b8922a;cursor:pointer;}
+.vol-icon{font-size:14px;opacity:0.6;}
+.vol-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#8a6a1a;min-width:90px;text-align:right;}
+.prog-bar{height:2px;background:rgba(184,146,42,0.15);border-radius:1px;margin-bottom:32px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#b8922a,#c9a84c);transition:width 0.4s ease;}
+.zone-hdr{background:#1a3a2a;border-top:2px solid #c9a84c;border-radius:12px;padding:20px 24px;margin-bottom:24px;}
+.zone-num{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#e2c97e;margin-bottom:4px;}
+.zone-title{font-family:'Cormorant Garamond',serif;font-size:24px;color:#f7f2e8;margin-bottom:4px;}
+.zone-q{font-size:12px;color:rgba(247,242,232,0.75);font-style:italic;}
+.bq{margin-bottom:32px;animation:fi 0.5s ease;}
+.bq-num{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3e0e;margin-bottom:10px;font-weight:600;}
+.bq-text{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,3.5vw,21px);color:#1a0e04;line-height:1.5;margin-bottom:16px;}
+.options{display:flex;flex-direction:column;gap:8px;}
+.opt{background:#fff8f0;border:1px solid rgba(184,146,42,0.2);border-radius:10px;padding:14px 18px;color:#3a2a0e;font-family:'Barlow',sans-serif;font-size:13px;line-height:1.4;cursor:pointer;transition:all 0.25s;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(184,146,42,0.06);}
+.opt:hover{background:#fff0e0;border-color:rgba(184,146,42,0.4);color:#1a0e04;}
+.opt.sel{background:rgba(184,146,42,0.12);border-color:#b8922a;color:#1a0e04;}
+.opt-pts{font-family:'Cormorant Garamond',serif;font-size:20px;color:#b8922a;opacity:0.6;flex-shrink:0;}
+.opt.sel .opt-pts{opacity:1;}
+.result{text-align:center;padding:48px 0;animation:fi 0.8s ease;}
+.score-ring{width:160px;height:160px;border-radius:50%;margin:0 auto 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+.score-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.score-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:#8a6a1a;line-height:1;position:relative;z-index:1;}
+.score-max{font-size:14px;color:#4a3a20;position:relative;z-index:1;font-weight:500;}
+.res-state{font-family:'Cormorant Garamond',serif;font-size:32px;color:#1a0e04;margin-bottom:8px;}
+.res-desc{font-size:16px;color:#3a2a0e;line-height:1.6;max-width:400px;margin:0 auto 32px;}
+.presc-box{background:#1a3a2a;border-left:3px solid #c9a84c;border-radius:0 12px 12px 0;padding:20px 24px;text-align:left;margin-bottom:16px;}
+.presc-l{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#e2c97e;margin-bottom:8px;}
+.presc-t{font-size:15px;color:#f7f2e8;line-height:1.6;}
+.completion{text-align:center;padding:40px 0;animation:fi 0.8s ease;}
+.comp-icon{font-size:48px;margin-bottom:24px;}
+.comp-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,7vw,52px);font-weight:300;color:#8a6a1a;margin-bottom:24px;}
+.footer{text-align:center;padding:24px;font-size:11px;letter-spacing:0.1em;color:rgba(74,58,32,0.4);text-transform:uppercase;background:#f0e8d8;}
+</style>
+</head>
+<body>
+<div class="amb amb1"></div>
+<div class="amb amb2"></div>
+
+<!-- ACCUEIL OUTILS -->
+<div id="home" class="screen active">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 24px;">
+    <div style="font-size:40px;margin-bottom:12px">〰</div>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,7vw,48px);font-weight:300;letter-spacing:0.05em;line-height:1.1;margin-bottom:6px;">La Voie <span style="color:var(--gold);font-style:italic;">Souveraine</span></h1>
+    <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);margin-bottom:24px;">Racine &amp; Impact — Franck</p>
+
+    <!-- GUIDE DU RITUEL -->
+    <div style="background:rgba(138,106,26,0.07);border:1.5px solid rgba(138,106,26,0.3);border-radius:14px;padding:16px 20px;margin-bottom:24px;max-width:500px;width:100%;text-align:left;">
+      <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3e0e;margin-bottom:12px;text-align:center;font-weight:700;">Le rituel · 15 à 20 minutes</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(138,106,26,0.15);border:1.5px solid rgba(138,106,26,0.5);display:flex;align-items:center;justify-content:center;font-size:13px;color:#3a2a08;font-weight:700;flex-shrink:0;">1</div>
+        <div style="text-align:left;"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;color:#3a2a08;font-weight:600;">Le Protocole</span> <span style="font-size:14px;color:#3a2a08;font-weight:400;">— traverse le blocage · 11 min</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;padding-left:14px;">
+        <div style="width:1px;height:16px;background:rgba(201,168,76,0.2);margin-right:-1px;margin-left:13px;flex-shrink:0;"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(138,106,26,0.15);border:1.5px solid rgba(138,106,26,0.5);display:flex;align-items:center;justify-content:center;font-size:13px;color:#3a2a08;font-weight:700;flex-shrink:0;">2</div>
+        <div style="text-align:left;"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;color:#3a2a08;font-weight:600;">La Boussole</span> <span style="font-size:14px;color:#3a2a08;font-weight:400;">— mesure ton état · 5 min</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;padding-left:14px;">
+        <div style="width:1px;height:16px;background:rgba(201,168,76,0.2);margin-right:-1px;margin-left:13px;flex-shrink:0;"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(138,106,26,0.15);border:1.5px solid rgba(138,106,26,0.5);display:flex;align-items:center;justify-content:center;font-size:13px;color:#3a2a08;font-weight:700;flex-shrink:0;">3</div>
+        <div style="text-align:left;"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;color:#3a2a08;font-weight:600;">Le Journal</span> <span style="font-size:14px;color:#3a2a08;font-weight:400;">— ancre et trace · 2 min</span></div>
+      </div>
+      <div style="font-size:13px;color:#3a2a08;font-style:italic;margin-top:12px;text-align:center;font-weight:500;">À faire en une seule fois · au moment qui te convient</div>
+    </div>
+
+    <!-- 3 CARTES -->
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:500px;margin:0 auto;">
+      <div class="nav-card" onclick="goProtocole()">
+        <div class="card-icon">🌊</div>
+        <div class="card-title">1 · Le Protocole</div>
+        <div class="card-desc">Guidé pas à pas de l'état de survie à l'état souverain</div>
+        <div class="card-time">⏱ 11 minutes</div>
+      </div>
+      <div class="nav-card" onclick="goBoussole()">
+        <div class="card-icon">🧭</div>
+        <div class="card-title">2 · La Boussole</div>
+        <div class="card-desc">Diagnostic instantané — est-ce que je danse ou est-ce que je lutte ?</div>
+        <div class="card-time">⏱ 5 minutes</div>
+      </div>
+      <div class="nav-card" onclick="window.location.href='journal-souverain.html'">
+        <div class="card-icon">📖</div>
+        <div class="card-title">3 · Journal du Souverain</div>
+        <div class="card-desc">Ancre tes scores et trace tes actions — les données du jour sont pré-remplies</div>
+        <div class="card-time">⏱ 2 min · 30 jours</div>
+      </div>
+    </div>
+    <button onclick="window.location.href='index.html'" style="margin-top:20px;background:transparent;border:none;color:var(--gray);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Barlow',sans-serif;">← Retour à l'accueil</button>
+  </div>
+  <div class="footer">Surcharge mentale · Épuisement intérieur · Transformation</div>
+</div>
+
+<!-- PROTOCOLE -->
+<div id="protocole" class="screen">
+  <button class="back-btn" onclick="showS('home')">← Outils</button>
+  <div class="inner">
+    <div class="step-indicator" id="dots"></div>
+
+    <!-- INTRO -->
+    <div class="step-block active" id="s-intro">
+      <div class="step-num">○</div>
+      <h2 class="step-title">Pose ton intention</h2>
+      <p class="step-subtitle">Avant de commencer — un seul blocage</p>
+      <div class="instr">Le protocole travaille sur <strong>une seule difficulté à la fois</strong>. Formule en une phrase ce qui te pèse ou te bloque en ce moment.</div>
+      <div class="qblock">
+        <div class="qlabel">Sur quoi tu travailles aujourd'hui ?</div>
+        <textarea class="ta" rows="2" id="objInput" placeholder="Ex : J'ai du mal à contacter des prospects..."></textarea>
+      </div>
+      <button class="btn-p" onclick="confirmObj()">Poser l'intention et commencer →</button>
+    </div>
+
+    <!-- STEP 0 -->
+    <div class="step-block" id="s-0">
+      <div class="step-num">0</div>
+      <h2 class="step-title">Le Test du Souverain</h2>
+      <p class="step-subtitle">60 secondes · Identitaire</p>
+      <div class="obj-display" id="od0"><div class="obj-label">Mon intention</div><div class="obj-text" id="ot0"></div></div>
+      <div class="instr">Avant d'agir — évalue ton état intérieur honnêtement.</div>
+      <div class="qblock">
+        <div class="qlabel">Question 1</div>
+        <div class="qtext">Est-ce la situation qui est complexe — ou est-ce mon état intérieur qui la rend insurmontable ?</div>
+        <div style="margin-top:12px;padding:12px 14px;background:rgba(201,168,76,0.06);border-radius:8px;font-size:12px;color:var(--gray);line-height:1.7;font-style:italic;">
+          Prends le temps d'y répondre honnêtement. Puis réponds aux questions suivantes et laisse-toi guider — le protocole s'adapte à ton état.
+        </div>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">Question 2 — Ce qui résiste en moi</div>
+        <textarea class="ta" style="height:48px;padding:12px 16px;resize:none;" id="resWord" placeholder="Un seul mot : peur, doute, fatigue, ego..."></textarea>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">Niveau de résistance — avant</div>
+        <div class="qtext" style="font-size:14px;margin-bottom:8px;">Sur 10 — combien cette difficulté pèse en ce moment ?</div>
+        <div class="res-row" id="rBefore">
+          <button class="rb" onclick="selR('rBefore',this,1)">1</button><button class="rb" onclick="selR('rBefore',this,2)">2</button><button class="rb" onclick="selR('rBefore',this,3)">3</button><button class="rb" onclick="selR('rBefore',this,4)">4</button><button class="rb" onclick="selR('rBefore',this,5)">5</button><button class="rb" onclick="selR('rBefore',this,6)">6</button><button class="rb" onclick="selR('rBefore',this,7)">7</button><button class="rb" onclick="selR('rBefore',this,8)">8</button><button class="rb" onclick="selR('rBefore',this,9)">9</button><button class="rb" onclick="selR('rBefore',this,10)">10</button>
+        </div>
+      </div>
+      <button class="btn-p" onclick="goToStep1()">Commencer la Respiration Souveraine →</button>
+      <button class="btn-s" onclick="prevStep()">← Modifier mon intention</button>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step-block" id="s-1">
+      <div class="step-num">1</div>
+      <h2 class="step-title">La Respiration Souveraine</h2>
+      <p class="step-subtitle">2 min 30 · 6 cycles · Physiologique</p>
+
+      <!-- ANCRAGE SOMATIQUE -->
+      <div style="background:rgba(138,106,26,0.08);border-left:3px solid rgba(138,106,26,0.4);border-radius:0 10px 10px 0;padding:16px 18px;margin-bottom:16px;">
+        <div style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#8a6a1a;margin-bottom:8px;font-weight:600;">Ancrage — avant de commencer</div>
+        <div style="font-size:14px;color:#1a0e04;line-height:1.8;">Pose tes deux pieds à plat sur le sol. <strong>Sens leur poids.</strong><br>
+        Pose tes mains sur tes cuisses. <strong>Sens la chaleur de tes paumes.</strong><br>
+        Inspire une fois lentement. Tu es là.</div>
+      </div>
+
+      <!-- FENÊTRE DE TOLÉRANCE — optionnelle -->
+      <div style="background:#fffaf4;border:1px solid rgba(138,106,26,0.18);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8a6a1a;margin-bottom:10px;font-weight:600;">Comment tu te sens en ce moment ? <span style="font-size:10px;font-weight:400;color:#6b5e4a;">(optionnel)</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="stateAgite" onclick="selectState('agite')" style="flex:1;min-width:140px;padding:10px 12px;border-radius:10px;border:1px solid rgba(138,106,26,0.2);background:#fffaf4;font-size:12px;color:#3a2a0e;cursor:pointer;line-height:1.4;text-align:left;transition:all 0.2s;">
+            ⚡ <strong>Agité</strong><br><span style="font-size:11px;color:#6b5e4a;">Pensées qui s'emballent, tension, urgence</span>
+          </button>
+          <button id="stateVide" onclick="selectState('vide')" style="flex:1;min-width:140px;padding:10px 12px;border-radius:10px;border:1px solid rgba(138,106,26,0.2);background:#fffaf4;font-size:12px;color:#3a2a0e;cursor:pointer;line-height:1.4;text-align:left;transition:all 0.2s;">
+            🌫 <strong>Vide</strong><br><span style="font-size:11px;color:#6b5e4a;">Lourd, déconnecté, sans énergie</span>
+          </button>
+        </div>
+        <div id="stateGuidance" style="display:none;margin-top:10px;font-size:13px;color:#3a2a0e;line-height:1.6;padding:8px 12px;background:rgba(138,106,26,0.06);border-radius:8px;font-style:italic;"></div>
+      </div>
+
+      <div class="instr">
+        Position assise, dos droit, mains sur les cuisses.<br><br>
+        Imagine l'eau autour de toi. <strong>À chaque expiration, le niveau descend.</strong><br>
+        Épaules... poitrine... ventre... genoux... chevilles...<br>
+        Jusqu'à ruisseler sous tes pieds — et tu avances librement.
+      </div>
+      <div class="breath-wrap">
+        <div class="bcircle" id="bc"><span id="bct">Prêt</span></div>
+        <div class="bphase" id="bph">Appuie pour commencer</div>
+        <div class="bcount" id="bcnt">—</div>
+        <div class="wave-vis">
+          <div class="wave-labels"><span>Épaules</span><span>Genoux</span><span>Chevilles</span></div>
+          <div class="wave-bars" id="wbars"></div>
+          <div class="wave-msg" id="wmsg">Niveau de la vague : épaules</div>
+        </div>
+        <div class="cycle-count" id="ccnt">Cycle 0 / 6</div>
+      </div>
+      <div class="vol-control">
+        <span class="vol-icon">🔕</span>
+        <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="25" oninput="updateVol(this.value)">
+        <span class="vol-icon">🔔</span>
+        <span class="vol-label" id="volLabel">Volume discret</span>
+      </div>
+      <button class="btn-start" id="bStartBtn" onclick="startBreath()">▶ Démarrer les 6 cycles</button>
+      <button class="btn-p" id="bNextBtn" style="display:none" onclick="goStep(2)">Continuer vers la Carte Souveraine →</button>
+      <button class="btn-s" onclick="goStep(2)">Passer cette étape</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-block" id="s-2">
+      <div class="step-num">2</div>
+      <h2 class="step-title">La Carte Souveraine</h2>
+      <p class="step-subtitle">3 à 4 minutes · Cognitif</p>
+      <div class="obj-display" id="od2"><div class="obj-label">Mon intention</div><div class="obj-text" id="ot2"></div></div>
+      <div class="instr">Mental calme. Sépare ce qui dépend de toi de ce qui n'en dépend pas.</div>
+      <div class="qblock">
+        <div class="qlabel">Ce qui dépend de moi aujourd'hui</div>
+        <textarea class="ta" rows="3" placeholder="Les actions, décisions que je peux faire maintenant..."></textarea>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">Ce que je lâche sans culpabilité</div>
+        <textarea class="ta" rows="2" placeholder="La réponse des autres, le timing, les circonstances..."></textarea>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">L'action minimale prouvable aujourd'hui</div>
+        <div class="qtext" style="font-size:14px;margin-bottom:8px;">La plus petite action vérifiable. Pas la meilleure — la plus petite vraie.</div>
+        <textarea class="ta" rows="2" placeholder="Une seule action concrète et observable..."></textarea>
+      </div>
+      <button class="btn-p" onclick="pushPHistory(2);goStep(3)">Ancrer avec la Respiration de l'Accompli →</button>
+      <button class="btn-s" onclick="prevStep()">← Retour</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-block" id="s-3">
+      <div class="step-num">3</div>
+      <h2 class="step-title">La Respiration de l'Accompli</h2>
+      <p class="step-subtitle">3 minutes · 18 cycles · Physiologique + Identitaire</p>
+      <div class="instr">Ferme les yeux. Laisse monter l'image de toi — <em>après</em>. Pas le chemin. Toi, une fois que c'est traversé.<br><br><strong>Inspire 5 sec</strong> : l'image monte.<br><strong>Expire 5 sec</strong> : la sensation s'installe.</div>
+      <div class="anchor">« C'est déjà en mouvement. »</div>
+      <div class="timer-wrap" id="accTimerWrap" style="display:none">
+        <div class="timer-num" id="accTimer">3:00</div>
+        <div class="timer-lbl">Inspire 5 sec — Expire 5 sec</div>
+      </div>
+      <button class="btn-start" id="accStartBtn" onclick="startAccompli()">▶ Démarrer 3 minutes</button>
+      <button class="btn-p" id="accompliNextBtn2" style="display:none" onclick="pushPHistory(3);goStep(4)">Le Pas du Souverain →</button>
+      <!-- Option méditation guidée -->
+      <details style="margin-top:16px">
+        <summary style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);cursor:pointer;list-style:none;padding:10px 0">🎙 Préfères-tu être guidé par audio ?</summary>
+        <div class="med-box" style="margin-top:12px">
+          <div class="med-title" style="font-size:18px">L'Accompli — Méditation Guidée</div>
+          <div class="med-desc">Guidée par Franck · Racine &amp; Impact · 4 min</div>
+          <audio class="audio-player" controls controlsList="nodownload" style="width:100%;margin:12px 0 8px;border-radius:8px;">
+            <source src="meditation-accompli.m4a" type="audio/mp4">
+          </audio>
+          <p style="font-size:11px;color:rgba(138,154,142,0.5);font-style:italic;">Lance l'audio à la place du timer. Même effet, guidé par voix.</p>
+        </div>
+      </details>
+      <button class="btn-s" onclick="prevStep()">← Retour</button>
+      <button class="btn-s" onclick="goStep(4)">Passer cette étape</button>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-block" id="s-4">
+      <div class="step-num">4</div>
+      <h2 class="step-title">Le Pas du Souverain</h2>
+      <p class="step-subtitle">30 secondes · Comportemental</p>
+      <div class="instr">Le protocole ne se termine pas dans ta tête. Il se termine dans le monde réel.</div>
+      <div class="qblock">
+        <div class="qlabel">Dans les 20 prochaines minutes, je fais :</div>
+        <textarea class="ta" rows="2" id="pasAct" placeholder="Une action unique, concrète, observable..."></textarea>
+      </div>
+      <div class="qblock">
+        <div class="qlabel">Niveau de résistance — après le protocole</div>
+        <div class="res-row" id="rAfter">
+          <button class="rb" onclick="selR('rAfter',this,1)">1</button><button class="rb" onclick="selR('rAfter',this,2)">2</button><button class="rb" onclick="selR('rAfter',this,3)">3</button><button class="rb" onclick="selR('rAfter',this,4)">4</button><button class="rb" onclick="selR('rAfter',this,5)">5</button><button class="rb" onclick="selR('rAfter',this,6)">6</button><button class="rb" onclick="selR('rAfter',this,7)">7</button><button class="rb" onclick="selR('rAfter',this,8)">8</button><button class="rb" onclick="selR('rAfter',this,9)">9</button><button class="rb" onclick="selR('rAfter',this,10)">10</button>
+        </div>
+      </div>
+      <button class="btn-p" onclick="finishProtocole()">Terminer le protocole ✓</button>
+      <button class="btn-s" onclick="prevStep()">← Retour</button>
+    </div>
+
+    <!-- MÉDITATION -->
+    <div class="step-block" id="s-med">
+      <div class="step-num">〰</div>
+      <h2 class="step-title">La Méditation de la Vague</h2>
+      <p class="step-subtitle">La vague n'est pas encore descendue — prends le temps</p>
+      <div class="instr">Ce n'est pas un échec — c'est une information. Ton système nerveux a besoin d'un peu plus de temps.<br><br>Écoute cette méditation guidée, puis reprends le protocole.</div>
+      <div class="med-box">
+        <div class="med-title">La Vague — Méditation Guidée</div>
+        <div class="med-desc">Guidée par Franck · Racine &amp; Impact · 5 min</div>
+        <audio class="audio-player" controls controlsList="nodownload" style="width:100%;margin:12px 0 8px;border-radius:8px;">
+          <source src="meditation-vague.m4a" type="audio/mp4">
+          Ton navigateur ne supporte pas la lecture audio.
+        </audio>
+        <p style="font-size:11px;color:rgba(138,154,142,0.5);margin-top:4px;font-style:italic;">Mets-toi en position assise. Lance l'audio. Ferme les yeux.</p>
+      </div>
+      <button class="btn-p" onclick="reprendreDepuisRespiration()">Reprendre le protocole →</button>
+      <button class="btn-s" onclick="showS('home')">Revenir aux outils</button>
+    </div>
+
+    <!-- COMPLETION -->
+    <div class="step-block" id="s-done">
+      <div class="completion">
+        <div class="comp-icon">🌊</div>
+        <div class="comp-title">Souverain.</div>
+        <div class="delta-box" id="deltaBox"></div>
+        <div class="anchor">« Je reste fidèle à ma direction.<br>Je reste humble devant le chemin.<br>Et je me laisse transformer par ce que je traverse. »</div>
+        <div id="protocole-next-action"></div>
+        <button class="btn-s" onclick="showS('home')" style="margin-top:12px">Revenir aux outils</button>
+        <button class="btn-s" onclick="goProtocole()">Recommencer</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Racine &amp; Impact · La Voie Souveraine</div>
+</div>
+
+
+
+<!-- BOUSSOLE -->
+<div id="boussole" class="screen">
+  <button class="back-btn" onclick="showS('home')">← Outils</button>
+  <div class="inner">
+    <div class="step-num" style="text-align:center">🧭</div>
+    <h2 class="step-title" style="text-align:center;margin-bottom:8px">La Boussole</h2>
+    <p class="step-subtitle" style="text-align:center;margin-bottom:32px">Est-ce que je danse ou est-ce que je lutte ?</p>
+    <div class="prog-bar"><div class="prog-fill" id="bProg" style="width:0%"></div></div>
+    <div id="bContent"></div>
+  </div>
+  <div class="footer">Racine &amp; Impact · La Voie Souveraine</div>
+</div>
+
+
+
+<script>
+// SONS — Web Audio API — créé seulement au premier geste utilisateur
+let AC = null;
+
+function getAC(){
+  if(!AC){
+    try{ AC = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
+  }
+  if(AC && AC.state === 'suspended') AC.resume();
+  return AC;
+}
+
+// SONS — Gong et bol tibétain synthétiques via Web Audio API
+let VOL = 0.25; // Volume par défaut — discret
+
+function updateVol(val){
+  VOL = val / 100 * 0.35; // Max 0.35 pour rester confortable
+  const label = document.getElementById('volLabel');
+  if(label){
+    if(val < 20) label.textContent = 'Quasi silencieux';
+    else if(val < 45) label.textContent = 'Volume discret';
+    else if(val < 70) label.textContent = 'Volume modéré';
+    else label.textContent = 'Volume fort';
+  }
+  // Mettre à jour le gradient du slider
+  const slider = document.getElementById('volSlider');
+  if(slider) slider.style.background=`linear-gradient(90deg,var(--gold) ${val}%,rgba(201,168,76,0.2) ${val}%)`;
+}
+function playGong(freq, dur, volRatio=1.0){
+  try {
+    const vol = VOL * volRatio;
+    const ctx=getAC(); if(!ctx) return;
+    // Oscillateur principal — fondamentale
+    const o1=ctx.createOscillator(), g1=ctx.createGain();
+    // Harmonique — overtone chaud
+    const o2=ctx.createOscillator(), g2=ctx.createGain();
+    // Légère distorsion douce via waveshaper
+    const ws=ctx.createWaveShaper();
+    const curve=new Float32Array(256);
+    for(let i=0;i<256;i++){ const x=i*2/256-1; curve[i]=x*(1+0.3*Math.abs(x))/(1+0.3); }
+    ws.curve=curve;
+
+    o1.connect(g1); o2.connect(g2);
+    g1.connect(ws); g2.connect(ws);
+    ws.connect(ctx.destination);
+
+    o1.type='sine'; o1.frequency.setValueAtTime(freq, ctx.currentTime);
+    o2.type='sine'; o2.frequency.setValueAtTime(freq*2.76, ctx.currentTime); // harmonique de bol tibétain
+
+    // Attaque rapide, longue décroissance — caractéristique du gong
+    g1.gain.setValueAtTime(0, ctx.currentTime);
+    g1.gain.linearRampToValueAtTime(vol, ctx.currentTime+0.015);
+    g1.gain.exponentialRampToValueAtTime(vol*0.3, ctx.currentTime+0.4);
+    g1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+dur);
+
+    g2.gain.setValueAtTime(0, ctx.currentTime);
+    g2.gain.linearRampToValueAtTime(vol*0.4, ctx.currentTime+0.02);
+    g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+dur*0.6);
+
+    o1.start(); o1.stop(ctx.currentTime+dur);
+    o2.start(); o2.stop(ctx.currentTime+dur);
+  } catch(e){}
+}
+
+// Fréquences des bols tibétains authentiques
+function soundInhale(){ playGong(396, 2.5, 0.8); }
+function soundHold(){   playGong(285, 1.8, 0.6); }
+function soundExhale(){ playGong(174, 3.5, 0.9); }
+function soundBell(){   playGong(528, 4.0, 1.0); }
+function soundGongDeep(){ playGong(136, 5.0, 1.1); }
+function soundGongLight(){ playGong(639, 3.5, 0.9); }
+
+// CHAMPS OBLIGATOIRES
+// STATE GLOBAL — déclaration manquante restaurée
+let S = { obj:'', rBefore:null, rAfter:null, bCycle:0, bPhase:0, bTimer:null, aTimer:null };
+let pHistory = [];
+let bHistory = [];
+
+function requireField(id, msg){
+  const el=document.getElementById(id);
+  if(!el) return true;
+  const val=el.value.trim();
+  if(!val){ el.style.borderColor='rgba(201,168,76,0.8)'; el.focus(); el.placeholder=msg||'Ce champ est requis pour continuer...'; setTimeout(()=>el.style.borderColor='',2000); return false; }
+  return true;
+}
+
+function requireResistance(groupId, msg){
+  const sel=document.querySelector('#'+groupId+' .rb.sel');
+  if(!sel){
+    const row=document.getElementById(groupId);
+    row.style.outline='1px solid rgba(201,168,76,0.8)'; row.style.borderRadius='8px';
+    setTimeout(()=>{ row.style.outline=''; },2000);
+    showToast(msg||'Sélectionne un niveau de résistance pour continuer');
+    return false;
+  }
+  return true;
+}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--gold);z-index:9999;letter-spacing:0.05em;backdrop-filter:blur(10px);transition:opacity 0.3s;'; document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  setTimeout(()=>{ t.style.opacity='0'; },2500);
+}
+
+// HISTORIQUE pour retour arrière
+function pushPHistory(step){ pHistory.push(step); }
+function pushBHistory(idx){ bHistory.push(idx); }
+
+function selectState(state){
+  const btnA = document.getElementById('stateAgite');
+  const btnV = document.getElementById('stateVide');
+  const guide = document.getElementById('stateGuidance');
+  if(!btnA || !btnV || !guide) return;
+
+  // Reset
+  btnA.style.borderColor = 'rgba(138,106,26,0.2)';
+  btnA.style.background = '#fffaf4';
+  btnV.style.borderColor = 'rgba(138,106,26,0.2)';
+  btnV.style.background = '#fffaf4';
+
+  if(state === 'agite'){
+    btnA.style.borderColor = '#8a6a1a';
+    btnA.style.background = 'rgba(138,106,26,0.1)';
+    guide.style.display = 'block';
+    guide.innerHTML = '⬇️ <strong>Mode calme :</strong> Concentre-toi sur l\'expiration — laisse-la durer 7 secondes. Imagine la vague qui descend lentement à chaque souffle. Le corps avant la tête.';
+  } else {
+    btnV.style.borderColor = '#8a6a1a';
+    btnV.style.background = 'rgba(138,106,26,0.1)';
+    guide.style.display = 'block';
+    guide.innerHTML = '⬆️ <strong>Mode activation :</strong> Concentre-toi sur l\'inspiration — deux temps bien distincts, énergiques. Sens l\'air qui t\'active et te recentre. Redresse légèrement le dos.';
+  }
+}
+
+// SCROLL ACCUEIL — sections supprimées, fonctions vides
+function scrollToPhilo(){}
+function scrollToOutils(){}
+
+// MUSIQUE AMBIENT — drone génératif
+let musicOn = false;
+let musicNodes = [];
+
+function toggleMusic(){
+  if(musicOn){ stopMusic(); } else { startMusic(); }
+}
+
+function startMusic(){
+  try {
+    const ctx=getAC(); if(!ctx) return;
+    musicNodes = [];
+    // Drone profond — fondamentale Om (136 Hz)
+    const freqs = [68, 136, 204, 272];
+    freqs.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.connect(lfoGain); lfoGain.connect(gain.gain);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq + Math.random()*0.5, ctx.currentTime);
+      const vol = i===0 ? 0.06 : i===1 ? 0.04 : i===2 ? 0.025 : 0.015;
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(vol * (VOL/0.08), ctx.currentTime + 3);
+      lfo.type = 'sine';
+      lfo.frequency.setValueAtTime(0.05 + i*0.03, ctx.currentTime);
+      lfoGain.gain.setValueAtTime(vol * 0.3, ctx.currentTime);
+      osc.start(); lfo.start();
+      musicNodes.push(osc, gain, lfo, lfoGain);
+    });
+    musicOn = true;
+    const mb=document.getElementById('musicBtn'); if(mb) mb.textContent='🔔';
+    if(mb) mb.style.borderColor='rgba(201,168,76,0.5)';
+    if(mb) mb.style.color='var(--gold)';
+  } catch(e){}
+}
+
+function stopMusic(){
+  musicNodes.forEach(n=>{ try{ n.stop?.(); n.disconnect?.(); }catch(e){} });
+  musicNodes = [];
+  musicOn = false;
+  const mb2=document.getElementById('musicBtn'); if(mb2) mb2.textContent='🔇';
+  if(mb2) mb2.style.borderColor='rgba(201,168,76,0.2)';
+  if(mb2) mb2.style.color='var(--gray)';
+}
+
+// Arrêter la musique quand on quitte l'accueil
+function goHome(){ clearT(); stopMusic(); showS('home'); window.scrollTo(0,0); }
+
+// NAV
+function goProtocole(){ stopMusic(); showS('protocole'); initProtocole(); }
+function goBoussole(){ stopMusic(); showS('boussole'); initBoussole(); }
+function showS(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function clearT(){ if(S.bTimer){clearInterval(S.bTimer);S.bTimer=null;} if(S.aTimer){clearInterval(S.aTimer);S.aTimer=null;} }
+
+// RETOUR ARRIÈRE PROTOCOLE
+function prevStep(){
+  if(pHistory.length===0) return;
+  clearT();
+  const prev=pHistory.pop();
+  document.querySelectorAll('.step-block').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+prev).classList.add('active');
+  buildDots(typeof prev==='number'?prev:-1);
+  window.scrollTo(0,0);
+}
+
+// RETOUR ARRIÈRE BOUSSOLE
+function prevBQ(){
+  if(bHistory.length===0){ initBoussole(); return; }
+  const prev=bHistory.pop();
+  bAnswers.splice(prev);
+  renderBQ(prev);
+}
+
+// PROTOCOLE
+function initProtocole(){
+  clearT();
+  pHistory=[];
+  S={obj:'',rBefore:null,rAfter:null,bCycle:0,bPhase:0,bTimer:null,aTimer:null};
+  document.querySelectorAll('.step-block').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ta').forEach(t=>{if(t.tagName==='TEXTAREA')t.value='';});
+  document.querySelectorAll('.rb').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('resWord').value='';
+  document.getElementById('objInput').value='';
+  resetBreathUI(); resetAccUI();
+  document.getElementById('s-intro').classList.add('active');
+  buildDots(-1);
+}
+
+function buildDots(a){
+  const c=document.getElementById('dots'); c.innerHTML='';
+  for(let i=0;i<5;i++){ const d=document.createElement('div'); d.className='step-dot'+(i===a?' active':i<a?' done':''); c.appendChild(d); }
+}
+
+function confirmObj(){
+  if(!requireField('objInput','Décris ta difficulté en une phrase pour continuer...')) return;
+  S.obj=document.getElementById('objInput').value.trim();
+  ['0','2'].forEach(id=>{ const ot=document.getElementById('ot'+id); if(ot){ot.textContent=S.obj;} });
+  pushPHistory('intro');
+  goStep(0);
+}
+
+function goStep(n){
+  clearT();
+  document.querySelectorAll('.step-block').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+n).classList.add('active');
+  buildDots(n); window.scrollTo(0,0);
+}
+
+function goToStep1(){
+  if(!requireResistance('rBefore','Sélectionne ton niveau de résistance avant de continuer')) return;
+  pushPHistory(0);
+  goStep(1);
+}
+
+function selR(groupId, btn, val){
+  document.querySelectorAll('#'+groupId+' .rb').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  if(groupId==='rBefore') S.rBefore=val;
+  else S.rAfter=val;
+}
+
+function finishProtocole(){
+  if(!requireResistance('rAfter','Indique ton niveau de résistance après le protocole')) return;
+  const after=S.rAfter;
+  if(after!==null && after>=4){
+    document.querySelectorAll('.step-block').forEach(s=>s.classList.remove('active'));
+    document.getElementById('s-med').classList.add('active');
+    buildDots(-1); window.scrollTo(0,0); return;
+  }
+  showDone();
+}
+
+function reprendreDepuisRespiration(){ resetBreathUI(); resetAccUI(); goStep(1); }
+
+function showDone(){
+  document.querySelectorAll('.step-block').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-done').classList.add('active');
+  buildDots(5); window.scrollTo(0,0);
+  const b=S.rBefore, a=S.rAfter, box=document.getElementById('deltaBox');
+
+  // Sauvegarder les scores dans localStorage pour le journal
+  const today = new Date().toISOString().split('T')[0];
+  const saved = JSON.parse(localStorage.getItem('vsScores')||'{}');
+  saved[today] = saved[today] || {};
+  if(b) saved[today].rBefore = b;
+  if(a) saved[today].rAfter = a;
+  localStorage.setItem('vsScores', JSON.stringify(saved));
+
+  if(b&&a){
+    const diff=b-a;
+    let msg=diff>=3?'Une transformation significative. Tu es passé de la lutte à l\'état souverain.':diff>=1?'La vague a baissé. Le corps a entendu. Continue demain.':diff===0?'Même niveau — mais tu as traversé le protocole. C\'est déjà souverain.':'Reviens demain matin, avant le téléphone. La régularité construit ce que la volonté ne peut pas.';
+    box.innerHTML=`<div class="delta-row"><div><div class="delta-lbl">Avant</div><div class="delta-val">${b}<span style="font-size:16px;color:var(--gray)">/10</span></div></div><div style="font-size:24px;color:var(--gold);opacity:0.5">→</div><div><div class="delta-lbl">Après</div><div class="delta-val" style="color:${diff>0?'var(--gold-light)':'var(--gray)'}">${a}<span style="font-size:16px;color:var(--gray)">/10</span></div></div></div>${diff>0?`<div style="text-align:center;font-size:13px;color:var(--gold);margin-top:6px">↓ ${diff} point${diff>1?'s':''} de résistance</div>`:''}<div class="delta-msg">${msg}</div>`;
+  } else {
+    box.innerHTML=`<div class="delta-msg">Tu viens de traverser le protocole complet.<br>Maintenant — passe à l'action dans les 20 prochaines minutes.</div>`;
+  }
+
+  // Bouton navigation contextuelle vers Boussole
+  const nextBox = document.getElementById('protocole-next-action');
+  if(nextBox){
+    nextBox.innerHTML=`
+      <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:16px;text-align:center;margin-top:16px;">
+        <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Étape suivante du rituel</div>
+        <button class="btn-p" onclick="goBoussole()" style="margin-top:0">🧭 Passer à la Boussole →</button>
+      </div>`;
+  }
+}
+
+// BREATH
+const PHASES=[{n:'Première inspiration',d:2,c:'inhale',t:'Inspire...'},{n:'Deuxième inspiration',d:2,c:'inhale',t:'Encore...'},{n:'Rétention',d:4,c:'hold',t:'Retiens...'},{n:'Expiration',d:7,c:'exhale',t:'Expire...'}];
+const WAVE_MSGS=['épaules','poitrine','ventre','genoux','chevilles','sous les pieds — tu avances librement'];
+const WAVE_W=[240,200,160,120,80,20];
+
+function buildWave(){
+  const c=document.getElementById('wbars'); c.innerHTML='';
+  WAVE_W.forEach((w,i)=>{ const b=document.createElement('div'); b.className='wbar'; b.id='wb'+i; b.style.width=w+'px'; c.appendChild(b); });
+}
+
+function updateWave(cycle){
+  buildWave();
+  const lvl=Math.min(cycle,5);
+  for(let i=0;i<6;i++){ const b=document.getElementById('wb'+i); if(b)b.style.opacity=i>=lvl?'1':'0.12'; }
+  document.getElementById('wmsg').textContent='Niveau de la vague : '+WAVE_MSGS[lvl];
+}
+
+function resetBreathUI(){
+  S.bCycle=0; S.bPhase=0;
+  document.getElementById('bStartBtn').style.display='inline-flex';
+  document.getElementById('bNextBtn').style.display='none';
+  document.getElementById('bph').textContent='Appuie pour commencer';
+  document.getElementById('bcnt').textContent='—';
+  document.getElementById('ccnt').textContent='Cycle 0 / 6';
+  const bc=document.getElementById('bc'); bc.className='bcircle';
+  document.getElementById('bct').textContent='Prêt';
+  buildWave(); document.getElementById('wmsg').textContent='Niveau de la vague : épaules';
+}
+
+function startBreath(){ document.getElementById('bStartBtn').style.display='none'; buildWave(); runBreath(); }
+
+function runBreath(){
+  if(S.bCycle>=6){
+    document.getElementById('bph').textContent='✓ 6 cycles complétés';
+    document.getElementById('bcnt').textContent='';
+    document.getElementById('bct').textContent='✓';
+    document.getElementById('ccnt').textContent='Cycle 6 / 6';
+    document.getElementById('bNextBtn').style.display='block';
+    updateWave(5); soundBell(); return;
+  }
+  const p=PHASES[S.bPhase];
+  // Son au début de chaque phase
+  if(p.c==='inhale') soundInhale();
+  else if(p.c==='hold') soundHold();
+  else if(p.c==='exhale') soundExhale();
+  const bc=document.getElementById('bc'); bc.className='bcircle '+p.c;
+  document.getElementById('bct').textContent=p.t;
+  document.getElementById('bph').textContent=p.n.toUpperCase();
+  document.getElementById('ccnt').textContent=`Cycle ${S.bCycle+1} / 6`;
+  if(p.c==='exhale') updateWave(S.bCycle);
+  let t=p.d; document.getElementById('bcnt').textContent=t;
+  S.bTimer=setInterval(()=>{
+    t--; document.getElementById('bcnt').textContent=t>0?t:'';
+    if(t<=0){ clearInterval(S.bTimer); S.bPhase++;
+      if(S.bPhase>=PHASES.length){S.bPhase=0;S.bCycle++;}
+      setTimeout(runBreath,400); }
+  },1000);
+}
+
+// ACCOMPLI
+function resetAccUI(){
+  document.getElementById('accStartBtn').style.display='inline-flex';
+  const nb=document.getElementById('accompliNextBtn2'); if(nb) nb.style.display='none';
+  document.getElementById('accTimerWrap').style.display='none';
+  document.getElementById('accTimer').textContent='3:00';
+}
+
+function startAccompli(){
+  document.getElementById('accStartBtn').style.display='none';
+  document.getElementById('accTimerWrap').style.display='block';
+  soundGongDeep(); // Gong profond au démarrage
+  let s=180;
+  S.aTimer=setInterval(()=>{
+    s--; const m=Math.floor(s/60), sec=s%60;
+    document.getElementById('accTimer').textContent=`${m}:${sec.toString().padStart(2,'0')}`;
+    if(s<=0){
+      clearInterval(S.aTimer);
+      document.getElementById('accTimer').textContent='✓';
+      soundGongLight(); // Gong harmonieux à la fin
+      setTimeout(()=>soundBell(), 1500); // Double résonance
+      const nb=document.getElementById('accompliNextBtn2'); if(nb) nb.style.display='block';
+    }
+  },1000);
+}
+
+// BOUSSOLE
+const BQ=[
+  {z:0,n:'Q1',t:'Quand je pense à ma vision, est-ce que je ressens quelque chose dans mon corps ?',o:[{t:'Oui, clairement — chaleur, excitation, certitude',p:3},{t:'Vaguement — c\'est flou mais présent',p:2},{t:'Non — c\'est vide ou lointain',p:1}]},
+  {z:0,n:'Q2',t:'Est-ce que je pourrais expliquer ma direction en une phrase maintenant ?',o:[{t:'Oui, sans hésiter',p:3},{t:'Oui mais avec difficulté',p:2},{t:'Non, je cherche les mots',p:1}]},
+  {z:0,n:'Q3',t:'Est-ce que ma vision me donne encore envie de me lever le matin ?',o:[{t:'Oui — elle me porte',p:3},{t:'Parfois — les jours difficiles elle s\'efface',p:2},{t:'Non — je fonctionne par obligation',p:1}]},
+  {z:1,n:'Q4',t:'Quand mon plan ne fonctionne pas comme prévu, quelle est ma première réaction ?',o:[{t:'Je cherche un autre chemin vers la même destination',p:3},{t:'Je m\'énerve mais je m\'adapte',p:2},{t:'Je m\'accroche au plan ou j\'abandonne tout',p:1}]},
+  {z:1,n:'Q5',t:'Est-ce que je peux laisser la vie m\'enseigner un chemin imprévu ?',o:[{t:'Oui — j\'ai vécu des synchronicités qui m\'ont surpris',p:3},{t:'Parfois — quand je ne suis pas trop stressé',p:2},{t:'Non — j\'ai besoin de contrôler le comment',p:1}]},
+  {z:1,n:'Q6',t:'Est-ce que je force quelque chose en ce moment ?',o:[{t:'Non — j\'agis sans m\'y attacher',p:3},{t:'Un peu — je sens une tension dans l\'action',p:2},{t:'Oui — je pousse contre une résistance constante',p:1}]},
+  {z:2,n:'Q7',t:'Comment je décrirais mon état intérieur en ce moment ?',o:[{t:'Ancré, calme, présent — même si c\'est difficile',p:3},{t:'Variable — ça dépend des heures',p:2},{t:'Tendu, épuisé, réactif — je subis',p:1}]},
+  {z:2,n:'Q8',t:'Est-ce que mes actions ressemblent à la personne que je veux devenir ?',o:[{t:'Oui — je me reconnais dans ce que je fais',p:3},{t:'Parfois — il y a des écarts',p:2},{t:'Non — je fais des choses qui ne me ressemblent pas',p:1}]},
+  {z:2,n:'Q9',t:'Est-ce que je me transforme — ou je lutte pour rester le même ?',o:[{t:'Je sens que je grandis à travers ce que je traverse',p:3},{t:'Je ne sais pas encore',p:2},{t:'Je résiste à ce que la vie me demande de changer',p:1}]},
+];
+const BZ=[{n:'Z1',t:'Ma Direction',q:'Est-ce que je sais encore où je vais ?'},{n:'Z2',t:'Mon Rapport au Chemin',q:'Est-ce que je danse ou est-ce que je force ?'},{n:'Z3',t:'Mon État Intérieur',q:'Est-ce que je suis souverain ou en survie ?'}];
+let bAnswers=[];
+
+let bObj='';
+
+function initBoussole(){
+  bAnswers=[]; bObj='';
+  document.getElementById('bProg').style.width='0%';
+  // Écran d'intention
+  document.getElementById('bContent').innerHTML=`
+    <div class="step-num" style="text-align:center;font-size:48px;margin-bottom:0">🧭</div>
+    <h2 class="step-title" style="text-align:center;margin-bottom:8px">Pose ton intention</h2>
+    <p class="step-subtitle" style="text-align:center;margin-bottom:32px">Avant de te diagnostiquer — ancre-toi</p>
+    <div class="instr">La Boussole est plus précise quand tu l'ancres sur une situation concrète. Sur quoi tu veux faire le point aujourd'hui ?</div>
+    <div class="qblock">
+      <div class="qlabel">En ce moment, je pense à...</div>
+      <textarea class="ta" rows="2" id="bObjInput" placeholder="Ex : mon projet Racine & Impact, ma relation avec X, ma situation pro..."></textarea>
+    </div>
+    <button class="btn-p" onclick="confirmBObj()">Commencer le diagnostic →</button>
+  `;
+  window.scrollTo(0,0);
+}
+
+function confirmBObj(){
+  if(!requireField('bObjInput','Décris ta situation pour continuer...')) return;
+  bObj=document.getElementById('bObjInput').value.trim();
+  bHistory=[];
+  renderBQ(0);
+}
+
+function renderBQ(idx){
+  document.getElementById('bProg').style.width=(idx/BQ.length*100)+'%';
+  if(idx>=BQ.length){showBResult();return;}
+  const q=BQ[idx], zone=BZ[q.z];
+  const showZ=idx===0||BQ[idx-1].z!==q.z;
+  const objReminder=`<div class="obj-display" style="margin-bottom:20px"><div class="obj-label">Mon intention</div><div class="obj-text">${bObj}</div></div>`;
+  let html=(showZ?`<div class="zone-hdr"><div class="zone-num">${zone.n} — ${zone.t}</div><div class="zone-title">${zone.q}</div></div>`:'')+objReminder;
+  html+=`<div class="bq"><div class="bq-num">${q.n} sur 9</div><div class="bq-text">${q.t}</div><div class="options">`;
+  q.o.forEach(o=>{ html+=`<button class="opt" onclick="selBQ(${idx},${o.p},this)"><span>${o.t}</span><span class="opt-pts">${o.p}</span></button>`; });
+  html+=`</div></div>`;
+  // Bouton retour arrière
+  if(idx>0){
+    html+=`<button class="btn-s" style="margin-top:16px" onclick="prevBQ()">← Question précédente</button>`;
+  } else {
+    html+=`<button class="btn-s" style="margin-top:16px" onclick="initBoussole()">← Modifier mon intention</button>`;
+  }
+  document.getElementById('bContent').innerHTML=html; window.scrollTo(0,0);
+}
+
+function selBQ(idx,pts,btn){
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel'); bAnswers[idx]=pts;
+  pushBHistory(idx);
+  setTimeout(()=>renderBQ(idx+1),400);
+}
+
+function showBResult(){
+  document.getElementById('bProg').style.width='100%';
+  const z1=bAnswers.slice(0,3).reduce((a,b)=>a+b,0);
+  const z2=bAnswers.slice(3,6).reduce((a,b)=>a+b,0);
+  const z3=bAnswers.slice(6,9).reduce((a,b)=>a+b,0);
+  const total=z1+z2+z3;
+
+  // Évaluation globale
+  let sl,sd;
+  if(total>=21){sl='🌊 État Souverain';sd='Tu danses avec la vie. L\'alignement est là. Continue depuis cet endroit.';}
+  else if(total>=13){sl='🌀 État de Transition';sd='Tu oscilles. Il y a des zones fortes et des zones qui demandent attention. Un recalibrage ciblé suffit.';}
+  else{sl='⚡ État de Survie';sd='Tu luttes en ce moment. Ce n\'est pas un jugement — c\'est une information. Le protocole complet avant toute décision importante.';}
+
+  // Commentaires détaillés par zone
+  function zoneComment(score, zone){
+    if(zone===1){
+      if(score>=7) return {emoji:'✅',title:'Direction vivante',msg:'Ta vision est claire et désirable. Elle te porte encore. C\'est ton ancre — reviens-y quand le chemin devient dur.'};
+      if(score>=5) return {emoji:'🟡',title:'Direction qui s\'estompe',msg:'La vision est là mais elle a perdu de sa luminosité. Relis ton audio d\'intentions ce soir. Trois matins de rituel consécutifs suffiront à la raviver.'};
+      return {emoji:'🔴',title:'Direction perdue',msg:'Tu avances sans savoir vraiment pourquoi. Stop. Avant toute action, reviens à ta vision fondamentale. La Respiration de l\'Accompli ce soir — pas demain.'};
+    }
+    if(zone===2){
+      if(score>=7) return {emoji:'✅',title:'Tu danses avec la vie',msg:'Tu sais lâcher le comment tout en gardant le cap. Tu as compris que la balle doit se transformer pour passer. C\'est rare.'};
+      if(score>=5) return {emoji:'🟡',title:'Tu commences à forcer',msg:'Tu sens une résistance dans l\'action. Vérifie : est-ce que tu es tombé amoureux du plan au lieu de rester attaché à la destination ? La Carte Souveraine peut t\'aider à recalibrer.'};
+      return {emoji:'🔴',title:'Tu luttes contre la vie',msg:'Tu forces le passage au lieu de te laisser transformer. Rappelle-toi : la balle ne brise pas la serrure — elle devient ce qui peut passer. Recalcul du Souverain maintenant.'};
+    }
+    if(zone===3){
+      if(score>=7) return {emoji:'✅',title:'État souverain',msg:'Tu es ancré, présent, aligné avec qui tu deviens. Cet état est précieux — note ce qui t\'a amené là pour pouvoir y revenir intentionnellement.'};
+      if(score>=5) return {emoji:'🟡',title:'État instable',msg:'Tu glisses entre la présence et la réaction. La Respiration Souveraine — 6 cycles — peut stabiliser ça en moins de 3 minutes. Maintenant, pas plus tard.'};
+      return {emoji:'🔴',title:'Mode survie',msg:'Ton système nerveux est en alerte. Tu réagis plus que tu n\'agis. Pas de grande décision dans cet état. D\'abord le corps — Respiration Souveraine, puis Méditation de la Vague si nécessaire.'};
+    }
+  }
+
+  const c1=zoneComment(z1,1), c2=zoneComment(z2,2), c3=zoneComment(z3,3);
+  const r=60,circ=2*Math.PI*r,fill=(total/27)*circ,sc=total>=21?'#c9a84c':total>=13?'#e2c97e':'#8a9a8e';
+
+  document.getElementById('bContent').innerHTML=`
+  <div class="result">
+    <div style="text-align:center;margin-bottom:8px;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray)">Par rapport à</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--gold);text-align:center;margin-bottom:32px">${bObj}</div>
+
+    <div class="score-ring">
+      <svg width="160" height="160"><circle cx="80" cy="80" r="${r}" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="3"/><circle cx="80" cy="80" r="${r}" fill="none" stroke="${sc}" stroke-width="3" stroke-dasharray="${fill} ${circ}" stroke-linecap="round"/></svg>
+      <div class="score-num">${total}</div><div class="score-max">/ 27</div>
+    </div>
+    <h3 class="res-state">${sl}</h3>
+    <p class="res-desc">${sd}</p>
+
+    <!-- COMMENTAIRES PAR ZONE -->
+    <div style="text-align:left;margin-bottom:32px">
+      <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;text-align:center">Analyse par zone</p>
+
+      <div class="presc-box" style="margin-bottom:16px">
+        <div class="presc-l">Z1 · Ma Direction · ${z1}/9 &nbsp; ${c1.emoji}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);margin-bottom:6px">${c1.title}</div>
+        <div class="presc-t">${c1.msg}</div>
+      </div>
+
+      <div class="presc-box" style="margin-bottom:16px">
+        <div class="presc-l">Z2 · Mon Rapport au Chemin · ${z2}/9 &nbsp; ${c2.emoji}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);margin-bottom:6px">${c2.title}</div>
+        <div class="presc-t">${c2.msg}</div>
+        ${z2<=4 ? `<audio controls controlsList="nodownload" style="width:100%;margin-top:12px;border-radius:8px"><source src="meditation-recalcul.m4a" type="audio/mp4"></audio><p style="font-size:11px;color:rgba(138,154,142,0.5);margin-top:4px;font-style:italic">🎙 Le Recalcul — Méditation guidée par Franck</p>` : ''}
+      </div>
+
+      <div class="presc-box" style="margin-bottom:24px">
+        <div class="presc-l">Z3 · Mon État Intérieur · ${z3}/9 &nbsp; ${c3.emoji}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);margin-bottom:6px">${c3.title}</div>
+        <div class="presc-t">${c3.msg}</div>
+        ${z3<=4 ? `<audio controls controlsList="nodownload" style="width:100%;margin-top:12px;border-radius:8px"><source src="meditation-vague.m4a" type="audio/mp4"></audio><p style="font-size:11px;color:rgba(138,154,142,0.5);margin-top:4px;font-style:italic">🎙 La Vague — Méditation guidée par Franck</p>` : ''}
+      </div>
+    </div>
+
+    <div class="anchor">« Est-ce que je suis en train de forcer le passage —<br>ou de me laisser transformer pour le traverser ? »</div>
+
+    <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:16px;text-align:center;margin-bottom:16px;">
+      <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Étape suivante du rituel</div>
+      <button class="btn-p" onclick="window.location.href='journal-souverain.html'" style="margin-top:0">📖 Ouvrir le Journal — scores importés →</button>
+    </div>
+
+    <button class="btn-s" onclick="showS('home')">Revenir aux outils</button>
+    <button class="btn-s" onclick="initBoussole()">Refaire la Boussole</button>
+  </div>`;
+  window.scrollTo(0,0);
+
+  // Sauvegarder le score boussole dans localStorage
+  const today = new Date().toISOString().split('T')[0];
+  const saved = JSON.parse(localStorage.getItem('vsScores')||'{}');
+  saved[today] = saved[today] || {};
+  saved[today].boussole = total;
+  saved[today].boussoleZ1 = z1;
+  saved[today].boussoleZ2 = z2;
+  saved[today].boussoleZ3 = z3;
+  localStorage.setItem('vsScores', JSON.stringify(saved));
+}
+</script>
+</body>
+</html>
