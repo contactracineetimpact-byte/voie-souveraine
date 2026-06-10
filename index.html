@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Franck · Spécialiste du Déblocage en Action — Racine & Impact</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#c9a84c;--gold2:#e2c97e;--green:#1a3a2a;--green2:#2d5016;
+  --cream:#f7f2e8;--dark:#0a0f0a;--brown:#3a2a0e;
+}
+html{scroll-behavior:smooth;}
+body{background:#f7f2e8;color:#1a0e04;font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* ── NAV FIXE ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s;}
+nav.scrolled{background:rgba(10,15,10,0.92);backdrop-filter:blur(12px);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:18px;color:#c9a84c;letter-spacing:0.08em;font-style:italic;}
+.nav-links{display:flex;gap:24px;align-items:center;}
+.nav-link{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(247,242,232,0.7);text-decoration:none;transition:color 0.2s;cursor:pointer;}
+.nav-link:hover{color:#c9a84c;}
+.nav-cta{background:linear-gradient(135deg,#8a6a1a,#c9a84c);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-family:'Barlow',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;}
+
+/* ── MUSIC BTN ── */
+#musicBtn{position:fixed;bottom:24px;right:24px;z-index:200;background:rgba(26,58,42,0.9);border:1px solid rgba(201,168,76,0.4);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);transition:all 0.3s;font-size:18px;box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+#musicBtn:hover{border-color:var(--gold);transform:scale(1.05);}
+
+/* ── HERO ── */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0a140a;}
+.hero-bg{position:absolute;inset:0;background:url('franck.jpg') center 15%/cover no-repeat;opacity:0.28;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(160deg,rgba(5,12,5,0.9) 0%,rgba(10,20,10,0.6) 50%,rgba(26,58,42,0.85) 100%);}
+canvas#waveCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.1;}
+.hero-inner{position:relative;z-index:2;text-align:center;max-width:720px;padding:0 24px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 14px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0;animation:fadeUp 0.8s ease 0.2s forwards;}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,14vw,112px);font-weight:300;line-height:0.92;color:#f7f2e8;margin-bottom:8px;opacity:0;animation:fadeUp 0.8s ease 0.5s forwards;}
+.hero-h1 em{color:#c9a84c;font-style:italic;display:block;}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(17px,3vw,22px);color:rgba(247,242,232,0.75);line-height:1.65;margin:20px auto 36px;max-width:500px;opacity:0;animation:fadeUp 0.8s ease 0.8s forwards;}
+.hero-btns{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;animation:fadeUp 0.8s ease 1.1s forwards;}
+.btn-primary{background:linear-gradient(135deg,#8a6a1a,#c9a84c);color:#fff;border:none;border-radius:12px;padding:16px 36px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.3s;box-shadow:0 4px 24px rgba(201,168,76,0.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,0.4);}
+.btn-outline{background:transparent;color:rgba(247,242,232,0.9);border:1px solid rgba(201,168,76,0.4);border-radius:12px;padding:14px 32px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.3s;}
+.btn-outline:hover{border-color:var(--gold);color:#fff;}
+.hero-scroll{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;animation:fadeUp 0.8s ease 2s forwards;}
+.hero-scroll span{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(247,242,232,0.4);}
+.hero-scroll-line{width:1px;height:32px;background:linear-gradient(to bottom,rgba(201,168,76,0.6),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:0.3}50%{opacity:1}}
+
+/* ── STATS ── */
+#stats{background:var(--green);padding:48px 24px;}
+.stats-inner{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+.stat-item{text-align:center;padding:16px 8px;position:relative;}
+.stat-item:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:rgba(201,168,76,0.2);}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,9vw,72px);color:var(--gold);line-height:1;font-weight:300;}
+.stat-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(247,242,232,0.55);margin-top:6px;line-height:1.4;}
+
+/* ── SECTIONS COMMUNES ── */
+.section{padding:80px 24px;position:relative;}
+.section-inner{max-width:640px;margin:0 auto;}
+.eyebrow{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:block;font-weight:500;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,6vw,50px);font-weight:300;line-height:1.1;margin-bottom:24px;}
+.section-title em{color:var(--gold);font-style:italic;}
+.section-body{font-size:15px;color:#4a3a20;line-height:1.75;margin-bottom:24px;}
+
+/* ── PHILOSOPHIE ── */
+#philo{background:#f7f2e8;}
+.franck-card{display:flex;align-items:center;gap:20px;background:var(--green);border:1px solid rgba(201,168,76,0.3);border-radius:16px;padding:20px 24px;margin:28px 0;}
+.franck-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid rgba(201,168,76,0.5);flex-shrink:0;}
+.franck-name{font-family:'Cormorant Garamond',serif;font-size:22px;color:#e2c97e;margin-bottom:3px;}
+.franck-role{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(247,242,232,0.6);}
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+.insight-card{background:var(--green);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:18px;transition:all 0.3s;}
+.insight-card:hover{border-color:rgba(201,168,76,0.5);transform:translateY(-2px);}
+.insight-icon{font-size:22px;margin-bottom:10px;}
+.insight-title{font-family:'Cormorant Garamond',serif;font-size:16px;color:#e2c97e;margin-bottom:5px;}
+.insight-text{font-size:12px;color:rgba(247,242,232,0.8);line-height:1.55;}
+
+/* ── COÛTS ── */
+#couts{background:linear-gradient(180deg,#0a0f0a 0%,#0f1a10 100%);padding:80px 24px;}
+#couts .eyebrow{color:rgba(220,80,80,0.8);}
+#couts .section-title{color:#f7f2e8;}
+.cout-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0;}
+.cout-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:rgba(247,242,232,0.85);line-height:1.5;}
+.cout-x{color:rgba(220,80,80,0.8);font-size:15px;flex-shrink:0;margin-top:1px;}
+.stat-banner{background:rgba(180,60,60,0.1);border:1px solid rgba(180,60,60,0.3);border-radius:10px;padding:14px 18px;font-size:13px;color:rgba(247,242,232,0.8);font-style:italic;line-height:1.6;margin-top:20px;}
+
+/* ── SCHÉMA ── */
+#schema{background:#0f1a10;padding:60px 24px;}
+.schema-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.schema-col{border-radius:14px;padding:20px;text-align:center;}
+.schema-col.red{background:#1a0808;border:1px solid rgba(180,60,60,0.4);}
+.schema-col.gold{background:#0a1a0a;border:1px solid rgba(201,168,76,0.4);}
+.schema-col-title{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:16px;}
+.schema-col.red .schema-col-title{color:rgba(220,80,80,0.8);}
+.schema-col.gold .schema-col-title{color:rgba(201,168,76,0.8);}
+.schema-step{border-radius:8px;padding:10px;margin-bottom:8px;font-size:12px;color:#f7f2e8;}
+.schema-col.red .schema-step{background:rgba(180,60,60,0.12);border:1px solid rgba(180,60,60,0.3);}
+.schema-col.gold .schema-step{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);}
+.schema-arrow{font-size:14px;margin:3px 0;}
+.schema-col.red .schema-arrow{color:rgba(180,60,60,0.4);}
+.schema-col.gold .schema-arrow{color:rgba(201,168,76,0.4);}
+.schema-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(17px,3vw,21px);color:rgba(247,242,232,0.8);text-align:center;line-height:1.7;margin:28px auto;max-width:500px;}
+
+/* ── TIMELINE J ── */
+#timeline{background:#f7f2e8;padding:80px 24px;}
+.timeline{display:flex;flex-direction:column;gap:0;position:relative;margin:28px 0;}
+.timeline::before{content:'';position:absolute;left:36px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.4),transparent);}
+.tl-item{display:flex;align-items:flex-start;gap:16px;padding:16px 0;}
+.tl-dot{width:72px;height:72px;border-radius:50%;background:var(--green);border:2px solid rgba(201,168,76,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;}
+.tl-day{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);line-height:1;}
+.tl-dlabel{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(247,242,232,0.5);}
+.tl-content{padding-top:12px;}
+.tl-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:#1a0e04;margin-bottom:4px;}
+.tl-text{font-size:13px;color:#4a3a20;line-height:1.55;}
+
+/* ── BIENFAITS ── */
+#bienfaits{background:var(--green);padding:80px 24px;}
+#bienfaits .eyebrow{color:rgba(201,168,76,0.7);}
+#bienfaits .section-title{color:#f7f2e8;}
+.bienfait-card{background:rgba(10,20,12,0.5);border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:20px;margin-bottom:12px;transition:all 0.3s;}
+.bienfait-card:hover{border-color:rgba(201,168,76,0.5);background:rgba(10,20,12,0.7);}
+.bienfait-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.bienfait-icon{font-size:24px;}
+.bienfait-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:#e2c97e;}
+.bienfait-text{font-size:13px;color:rgba(247,242,232,0.85);line-height:1.6;}
+.bienfait-source{font-size:10px;color:rgba(247,242,232,0.4);margin-top:6px;font-style:italic;}
+
+/* ── POUR QUI ── */
+#pourqui{background:#f7f2e8;padding:80px 24px;}
+.profile-grid{display:flex;flex-direction:column;gap:10px;margin:24px 0;}
+.profile-item{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--green);border:1px solid rgba(201,168,76,0.25);border-radius:12px;transition:all 0.3s;}
+.profile-item:hover{background:var(--green2);border-color:rgba(201,168,76,0.5);}
+.pi-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.pi-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:#e2c97e;margin-bottom:3px;}
+.pi-desc{font-size:13px;color:rgba(247,242,232,0.88);line-height:1.55;}
+.not-for{margin-top:16px;padding:14px 18px;background:var(--green);border:1px solid rgba(201,168,76,0.2);border-radius:10px;font-size:13px;color:rgba(247,242,232,0.8);line-height:1.7;font-style:italic;}
+
+/* ── OUTILS ── */
+#outils{background:linear-gradient(180deg,#f2ead8 0%,#f7f2e8 100%);padding:80px 24px;}
+.tools-ritual{background:var(--green);border:1px solid rgba(201,168,76,0.3);border-radius:16px;padding:20px 24px;margin-bottom:24px;text-align:center;}
+.tools-ritual-title{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-weight:600;}
+.tools-steps{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+.tools-step{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:8px 14px;text-align:center;}
+.tools-step-num{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);}
+.tools-step-name{font-size:11px;color:#f7f2e8;font-weight:500;}
+.tools-step-time{font-size:10px;color:rgba(247,242,232,0.5);}
+.tools-arrow{color:rgba(201,168,76,0.4);font-size:18px;}
+.tool-card{background:var(--green);border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:24px;margin-bottom:12px;transition:all 0.3s;cursor:pointer;}
+.tool-card:hover{background:var(--green2);border-color:rgba(201,168,76,0.6);transform:translateX(4px);}
+.tool-header{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.tool-icon{font-size:28px;}
+.tool-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:#e2c97e;}
+.tool-time{font-size:11px;color:rgba(201,168,76,0.7);letter-spacing:0.1em;text-transform:uppercase;}
+.tool-desc{font-size:13px;color:rgba(247,242,232,0.88);line-height:1.6;margin-bottom:10px;}
+.tool-steps{display:flex;flex-wrap:wrap;gap:6px;}
+.tool-step-tag{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:3px 10px;font-size:11px;color:rgba(247,242,232,0.7);}
+
+/* ── TÉMOIGNAGES ── */
+#temoignages{background:#0a0f0a;padding:80px 24px;}
+#temoignages .eyebrow{color:var(--gold);}
+#temoignages .section-title{color:#f7f2e8;}
+#temoignages .section-body{color:rgba(247,242,232,0.7);}
+.temo-full{background:#111a11;border:1px solid rgba(201,168,76,0.25);border-radius:18px;overflow:hidden;margin-bottom:16px;transition:all 0.3s;}
+.temo-full:hover{border-color:rgba(201,168,76,0.5);}
+.temo-header{display:flex;align-items:center;gap:14px;padding:20px 20px 0;}
+.temo-avatar{width:52px;height:52px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.temo-name{font-family:'Cormorant Garamond',serif;font-size:19px;color:#e2c97e;}
+.temo-role{font-size:11px;color:rgba(247,242,232,0.45);margin-top:2px;}
+.temo-badge{margin-left:auto;background:rgba(60,160,100,0.15);border:1px solid rgba(60,160,100,0.4);border-radius:6px;padding:3px 10px;font-size:10px;color:rgba(60,160,100,0.9);font-weight:600;white-space:nowrap;}
+.temo-body{padding:16px 20px;}
+.temo-bloc{border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:10px;}
+.temo-bloc.red{border-color:rgba(180,60,60,0.5);background:rgba(180,60,60,0.07);}
+.temo-bloc.green{border-color:rgba(60,160,100,0.4);background:rgba(60,160,100,0.07);}
+.temo-bloc-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:4px;font-weight:600;}
+.temo-bloc.red .temo-bloc-label{color:rgba(220,80,80,0.8);}
+.temo-bloc.green .temo-bloc-label{color:rgba(60,160,100,0.9);}
+.temo-bloc-text{font-size:13px;color:rgba(247,242,232,0.85);line-height:1.55;}
+.temo-quote{background:rgba(5,12,5,0.7);margin:0 20px 20px;border-radius:10px;padding:14px 16px;font-size:13px;color:rgba(247,242,232,0.8);line-height:1.6;font-style:italic;}
+.temo-quote::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:32px;color:rgba(201,168,76,0.3);display:block;line-height:0.8;margin-bottom:8px;}
+
+/* MINI TEMOS */
+.temo-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.temo-mini{background:#111a11;border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:16px;transition:all 0.3s;}
+.temo-mini:hover{border-color:rgba(201,168,76,0.4);}
+.temo-mini-name{font-family:'Cormorant Garamond',serif;font-size:17px;color:#e2c97e;margin-bottom:4px;}
+.temo-mini-role{font-size:10px;color:rgba(247,242,232,0.35);margin-bottom:10px;}
+.temo-mini-quote{font-size:12px;color:rgba(247,242,232,0.75);line-height:1.6;font-style:italic;}
+
+/* ── VIDEO SECTION ── */
+#video-section{background:#0a0f0a;padding:60px 24px;}
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;}
+.video-card{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;group;}
+.video-card video{width:100%;height:180px;object-fit:cover;display:block;}
+.video-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,rgba(0,0,0,0.2) 60%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;}
+.video-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:44px;height:44px;border-radius:50%;background:rgba(201,168,76,0.85);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;transition:all 0.3s;}
+.video-card:hover .video-play{transform:translate(-50%,-60%) scale(1.1);background:var(--gold);}
+.video-caption{font-size:12px;color:#f7f2e8;font-weight:500;}
+.video-sub{font-size:10px;color:rgba(247,242,232,0.5);margin-top:2px;}
+
+/* ── CTA FINAL ── */
+#cta-final{background:var(--green);padding:80px 24px;text-align:center;}
+.cta-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,7vw,56px);color:#f7f2e8;font-weight:300;line-height:1.1;margin-bottom:12px;}
+.cta-title em{color:var(--gold);font-style:italic;}
+.cta-sub{font-size:15px;color:rgba(247,242,232,0.7);line-height:1.65;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;}
+.cta-trust{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:20px;}
+.trust-item{font-size:11px;color:rgba(247,242,232,0.5);display:flex;align-items:center;gap:6px;}
+
+/* ── FOOTER ── */
+footer{background:#050f05;padding:32px 24px;text-align:center;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-style:italic;margin-bottom:8px;}
+.footer-text{font-size:11px;color:rgba(247,242,232,0.3);letter-spacing:0.1em;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+.reveal-delay-4{transition-delay:0.4s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .insight-grid,.cout-grid,.schema-grid,.temo-mini-grid,.video-grid{grid-template-columns:1fr;}
+  .tools-steps{flex-direction:column;align-items:stretch;}
+  .tools-arrow{transform:rotate(90deg);}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">La Voie Souveraine</div>
+  <div class="nav-links">
+    <span class="nav-link" onclick="scrollTo('#philo')">La méthode</span>
+    <span class="nav-link" onclick="scrollTo('#temoignages')">Résultats</span>
+    <span class="nav-link" onclick="scrollTo('#outils')">Les outils</span>
+    <a class="nav-cta" href="https://calendly.com/contact-racineetimpact/appel-decouverte--15min-offert" target="_blank">Appel gratuit</a>
+  </div>
+</nav>
+
+<div id="musicBtn" onclick="toggleMusic()" title="Activer les vagues">🔇</div>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <canvas id="waveCanvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-badge">✦ Spécialiste du Déblocage en Action</div>
+    <h1 class="hero-h1">
+      Tu sais quoi faire.<br>
+      <em>Tu ne le fais pas.</em>
+    </h1>
+    <p class="hero-sub">
+      Ce n'est pas un manque de discipline.<br>
+      C'est une résistance intérieure invisible — et elle se débloque.
+    </p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="voie-souveraine.html">Faire le diagnostic gratuit →</a>
+      <a class="btn-outline" href="#philo">Comprendre la méthode ↓</a>
+      <div id="musicInvite" onclick="toggleMusic()" style="margin-top:4px;display:flex;align-items:center;gap:8px;cursor:pointer;padding:7px 14px;border:1px solid rgba(201,168,76,0.25);border-radius:20px;background:rgba(255,255,255,0.05);">
+        <span>🌊</span><span style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(247,242,232,0.6);">Activer les vagues</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Défiler</span>
+  </div>
+</section>
+
+<!-- ══ STATS ══════════════════════════════════════════════════════════════ -->
+<section id="stats">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <div class="stat-num">15</div>
+      <div class="stat-label">minutes<br>par jour</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-1">
+      <div class="stat-num">30</div>
+      <div class="stat-label">jours de<br>transformation</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-2">
+      <div class="stat-num">70<span style="font-size:0.5em">%</span></div>
+      <div class="stat-label">taux de<br>réussite</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PHILOSOPHIE ════════════════════════════════════════════════════════ -->
+<section id="philo" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">La méthode</span>
+    <h2 class="section-title reveal reveal-delay-1">
+      Tu ne procrastines pas.<br>
+      <em>Tu te protèges.</em>
+    </h2>
+
+    <!-- Photo Franck + identité -->
+    <div class="franck-card reveal reveal-delay-2">
+      <img src="franck.jpg" class="franck-photo" alt="Franck">
+      <div>
+        <div class="franck-name">Franck</div>
+        <div class="franck-role">Spécialiste du Déblocage en Action</div>
+        <p style="font-size:12px;color:rgba(247,242,232,0.65);margin-top:6px;line-height:1.5;">J'ai mis 15 ans à comprendre ce qui me bloquait. Aujourd'hui j'aide les entrepreneurs à le traverser en 30 jours.</p>
+      </div>
+    </div>
+
+    <p class="section-body reveal reveal-delay-3">
+      Ton cerveau associe l'action à un danger invisible — peur de l'échec, du regard, de ne pas être à la hauteur. Aucune liste de tâches ne peut vaincre ça. Il faut travailler sur l'état intérieur qui précède l'action.
+    </p>
+
+    <!-- Image Unsplash -->
+    <div class="reveal" style="border-radius:16px;overflow:hidden;margin:24px 0;box-shadow:0 8px 32px rgba(0,0,0,0.1);">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80&auto=format&fit=crop" alt="Entrepreneur en action" style="width:100%;height:220px;object-fit:cover;display:block;">
+    </div>
+
+    <div class="insight-grid reveal reveal-delay-2">
+      <div class="insight-card">
+        <div class="insight-icon">🧠</div>
+        <div class="insight-title">Le vrai problème</div>
+        <div class="insight-text">Ce n'est pas la stratégie qui te manque. C'est l'état intérieur qui précède l'action.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🌊</div>
+        <div class="insight-title">La solution</div>
+        <div class="insight-text">Réguler la résistance physiologique avant d'analyser. Le corps d'abord, la tête ensuite.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">📊</div>
+        <div class="insight-title">La mesure</div>
+        <div class="insight-text">Chaque jour tu mesures ta résistance, ton énergie, ta progression vers ton objectif.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🎯</div>
+        <div class="insight-title">Le résultat</div>
+        <div class="insight-text">Un objectif précis. 30 jours. Une courbe de transformation exportable.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COÛTS DU BLOCAGE ═══════════════════════════════════════════════════ -->
+<section id="couts" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Ce que le blocage te coûte vraiment</span>
+    <h2 class="section-title reveal reveal-delay-1" style="color:#f7f2e8;">
+      Chaque jour que tu attends,<br>
+      <em>tu perds.</em>
+    </h2>
+
+    <!-- Image Unsplash -->
+    <div class="reveal reveal-delay-1" style="border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+      <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80&auto=format&fit=crop" alt="Entrepreneur stressé" style="width:100%;height:200px;object-fit:cover;display:block;filter:grayscale(20%);">
+    </div>
+
+    <div class="cout-grid reveal reveal-delay-2">
+      <div class="cout-item"><span class="cout-x">✗</span>Des contrats non signés — tu as reporté l'appel</div>
+      <div class="cout-item"><span class="cout-x">✗</span>2h de productivité perdues chaque jour</div>
+      <div class="cout-item"><span class="cout-x">✗</span>Décisions prises dans l'urgence — souvent mauvaises</div>
+      <div class="cout-item"><span class="cout-x">✗</span>Trésorerie qui stagne pendant que les charges avancent</div>
+      <div class="cout-item"><span class="cout-x">✗</span>Opportunités disparues pendant que tu "réfléchis encore"</div>
+      <div class="cout-item"><span class="cout-x">✗</span>Crédibilité effritée aux yeux de tes clients</div>
+      <div class="cout-item"><span class="cout-x">✗</span>Projet en danger — non par manque de compétence</div>
+      <div class="cout-item"><span class="cout-x">✗</span>Culpabilité silencieuse qui s'accumule chaque soir</div>
+    </div>
+    <div class="stat-banner reveal reveal-delay-3">
+      85% des entrepreneurs français procrastinent. Le coût n'est pas dans l'effort fourni — il est dans les décisions non prises au bon moment.
+    </div>
+  </div>
+</section>
+
+<!-- ══ SCHÉMA 2 CHEMINS ═══════════════════════════════════════════════════ -->
+<section id="schema" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal" style="color:rgba(247,242,232,0.5);">Deux chemins. Un seul résultat possible.</span>
+    <div class="schema-grid reveal reveal-delay-1">
+      <div class="schema-col red">
+        <div class="schema-col-title">Sans déblocage</div>
+        <div class="schema-step">🌫 Blocage invisible</div>
+        <div class="schema-arrow">↓</div>
+        <div class="schema-step">🧠 Surcharge · Inaction</div>
+        <div class="schema-arrow">↓</div>
+        <div class="schema-step">📉 CA stagne · Décisions ratées</div>
+        <div class="schema-arrow">↓</div>
+        <div class="schema-step">🔒 Épuisement · Identité figée</div>
+      </div>
+      <div class="schema-col gold">
+        <div class="schema-col-title">Déblocage en Action</div>
+        <div class="schema-step">🎯 Résistance identifiée</div>
+        <div class="schema-arrow">↓</div>
+        <div class="schema-step">⚡ État régulé · Énergie libérée</div>
+        <div class="schema-arrow">↓</div>
+        <div class="schema-step">✅ Action alignée · CA progresse</div>
+        <div class="schema-arrow">↓</div>
+        <div class="schema-step">🌊 Nouvelle identité · Souverain</div>
+      </div>
+    </div>
+    <div class="schema-quote reveal reveal-delay-2">
+      « Le blocage ne coûte pas que du temps.<br>Il coûte des décisions, des contrats — et parfois une entreprise. »
+    </div>
+  </div>
+</section>
+
+<!-- ══ TIMELINE ═══════════════════════════════════════════════════════════ -->
+<section id="timeline" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Ce qui change, jour par jour</span>
+    <h2 class="section-title reveal reveal-delay-1">
+      30 jours.<br><em>Résultats mesurables.</em>
+    </h2>
+    <div class="timeline reveal reveal-delay-2">
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-day">J3</div><div class="tl-dlabel">jour</div></div>
+        <div class="tl-content">
+          <div class="tl-title">La résistance descend</div>
+          <div class="tl-text">Tu respires différemment face au même problème qui te paralysait.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-day">J7</div><div class="tl-dlabel">jour</div></div>
+        <div class="tl-content">
+          <div class="tl-title">Première action débloquée</div>
+          <div class="tl-text">Tu passes à l'action sur quelque chose reporté depuis des semaines — appel difficile, décision bloquée, lancement reporté.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-day">J14</div><div class="tl-dlabel">jour</div></div>
+        <div class="tl-content">
+          <div class="tl-title">Décisions plus rapides</div>
+          <div class="tl-text">Tu reprends de la crédibilité — aux yeux de tes clients et aux tiens.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-day">J21</div><div class="tl-dlabel">jour</div></div>
+        <div class="tl-content">
+          <div class="tl-title">Le CA commence à bouger</div>
+          <div class="tl-text">Pas parce que le marché a changé. Parce que toi tu agis enfin sur ce qui compte.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:rgba(201,168,76,0.7);background:rgba(201,168,76,0.15);"><div class="tl-day" style="color:#e2c97e;">J30</div><div class="tl-dlabel" style="color:rgba(201,168,76,0.6);">jour</div></div>
+        <div class="tl-content">
+          <div class="tl-title" style="color:#8a6a1a;">Transformation documentée</div>
+          <div class="tl-text">Une courbe de progression réelle. Un bilan exportable. Une preuve que quelque chose a changé — pas une promesse.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BIENFAITS ══════════════════════════════════════════════════════════ -->
+<section id="bienfaits" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Prouvé scientifiquement</span>
+    <h2 class="section-title reveal reveal-delay-1">Pas du bien-être.<br><em>Des résultats mesurables.</em></h2>
+
+    <div class="bienfait-card reveal reveal-delay-1">
+      <div class="bienfait-header"><span class="bienfait-icon">🌊</span><div class="bienfait-title">Une résistance intérieure qui descend</div></div>
+      <div class="bienfait-text">Les mêmes situations qui te bloquaient deviennent traitables. La Respiration Souveraine agit directement sur le nerf vague et réduit le cortisol de façon mesurable.</div>
+      <div class="bienfait-source">Porges, S. (2011). The Polyvagal Theory.</div>
+    </div>
+    <div class="bienfait-card reveal reveal-delay-2">
+      <div class="bienfait-header"><span class="bienfait-icon">✨</span><div class="bienfait-title">Des synchronicités qui apparaissent</div></div>
+      <div class="bienfait-text">Quand le cerveau est en état souverain — cohérence cardiaque, ondes alpha — il perçoit des opportunités qu'il ne voyait pas en mode survie.</div>
+      <div class="bienfait-source">Dispenza, J. (2012). · McCraty, R. (2015). Science of the Heart.</div>
+    </div>
+    <div class="bienfait-card reveal reveal-delay-3">
+      <div class="bienfait-header"><span class="bienfait-icon">⚡</span><div class="bienfait-title">Un passage à l'action naturel</div></div>
+      <div class="bienfait-text">L'intention d'implémentation fait passer le taux de passage à l'action de 40% à 91%. Le Pas du Souverain encode exactement ce mécanisme.</div>
+      <div class="bienfait-source">Gollwitzer, P.M. (1999). Implementation intentions. American Psychologist.</div>
+    </div>
+    <div class="bienfait-card reveal reveal-delay-4">
+      <div class="bienfait-header"><span class="bienfait-icon">🌱</span><div class="bienfait-title">Une identité qui se transforme durablement</div></div>
+      <div class="bienfait-text">21 jours de pratique régulière suffisent à créer de nouveaux circuits neuronaux dominants. Tu ne changes pas de comportement — tu changes qui tu es.</div>
+      <div class="bienfait-source">Doidge, N. (2007). The Brain That Changes Itself.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ POUR QUI ════════════════════════════════════════════════════════════ -->
+<section id="pourqui" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Pour qui</span>
+    <h2 class="section-title reveal reveal-delay-1">
+      C'est fait pour toi<br><em>si tu te reconnais ici.</em>
+    </h2>
+    <p class="section-body reveal reveal-delay-2" style="color:#4a3a20;">La méthode s'adresse aux entrepreneurs et indépendants qui ont la vision, les compétences — mais qui restent bloqués sur l'action.</p>
+
+    <div class="profile-grid reveal reveal-delay-2">
+      <div class="profile-item">
+        <span class="pi-icon">🔄</span>
+        <div><div class="pi-title">Celui qui tourne en rond</div><div class="pi-desc">Il sait ce qu'il veut. Il a les compétences. Mais quelque chose coince sans qu'il arrive à nommer quoi.</div></div>
+      </div>
+      <div class="profile-item">
+        <span class="pi-icon">🏗️</span>
+        <div><div class="pi-title">L'entrepreneur solo</div><div class="pi-desc">Il porte seul la charge mentale de construire. Il confond le chemin avec la destination et souffre quand le plan change.</div></div>
+      </div>
+      <div class="profile-item">
+        <span class="pi-icon">🤝</span>
+        <div><div class="pi-title">Le donneur épuisé</div><div class="pi-desc">Il donne aux autres, à sa famille, à son travail. Il oublie de se recharger. Il agit par obligation plutôt que par élan.</div></div>
+      </div>
+      <div class="profile-item">
+        <span class="pi-icon">🔍</span>
+        <div><div class="pi-title">Le chercheur</div><div class="pi-desc">Il a essayé beaucoup de choses. Il a des connaissances mais pas encore d'ancrage. Il cherche une méthode qui lui ressemble vraiment.</div></div>
+      </div>
+    </div>
+
+    <div class="not-for reveal reveal-delay-3">
+      Ce n'est pas pour quelqu'un en crise clinique ou en burnout sévère — dans ce cas un professionnel de santé est nécessaire. Ce n'est pas non plus pour quelqu'un qui cherche une solution rapide sans engagement. Cette voie demande 21 jours minimum de pratique régulière.
+    </div>
+  </div>
+</section>
+
+<!-- ══ OUTILS ══════════════════════════════════════════════════════════════ -->
+<section id="outils" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Les outils</span>
+    <h2 class="section-title reveal reveal-delay-1">
+      15 minutes par jour.<br><em>Un rituel complet.</em>
+    </h2>
+
+    <div class="tools-ritual reveal reveal-delay-2">
+      <div class="tools-ritual-title">Le rituel quotidien — à faire en une seule fois</div>
+      <div class="tools-steps">
+        <div class="tools-step">
+          <div class="tools-step-num">1</div>
+          <div class="tools-step-name">Protocole</div>
+          <div class="tools-step-time">11 min</div>
+        </div>
+        <div class="tools-arrow">→</div>
+        <div class="tools-step">
+          <div class="tools-step-num">2</div>
+          <div class="tools-step-name">Boussole</div>
+          <div class="tools-step-time">5 min</div>
+        </div>
+        <div class="tools-arrow">→</div>
+        <div class="tools-step">
+          <div class="tools-step-num">3</div>
+          <div class="tools-step-name">Journal</div>
+          <div class="tools-step-time">2 min</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="voie-souveraine.html" class="tool-card reveal reveal-delay-2" style="display:block;text-decoration:none;">
+      <div class="tool-header"><span class="tool-icon">🌊</span><div><div class="tool-title">Le Protocole</div><div class="tool-time">⏱ 11 minutes</div></div></div>
+      <div class="tool-desc">Guidé pas à pas — ancrage somatique, respiration souveraine, carte des actions. Tu dissous la résistance avant d'agir.</div>
+      <div class="tool-steps"><span class="tool-step-tag">Ancrage corps</span><span class="tool-step-tag">Respiration 6 cycles</span><span class="tool-step-tag">Carte Souveraine</span><span class="tool-step-tag">Pas du Souverain</span></div>
+    </a>
+    <a href="voie-souveraine.html" class="tool-card reveal reveal-delay-3" style="display:block;text-decoration:none;">
+      <div class="tool-header"><span class="tool-icon">🧭</span><div><div class="tool-title">La Boussole</div><div class="tool-time">⏱ 5 minutes · Gratuit</div></div></div>
+      <div class="tool-desc">Diagnostic instantané sur 27 points. Tu sais exactement où est ta résistance aujourd'hui — et ce que tu dois travailler.</div>
+      <div class="tool-steps"><span class="tool-step-tag">9 questions</span><span class="tool-step-tag">Score /27</span><span class="tool-step-tag">Résultat immédiat</span></div>
+    </a>
+    <a href="journal-souverain.html" class="tool-card reveal reveal-delay-4" style="display:block;text-decoration:none;">
+      <div class="tool-header"><span class="tool-icon">📖</span><div><div class="tool-title">Le Journal du Souverain</div><div class="tool-time">⏱ 2 min par jour · 30 jours</div></div></div>
+      <div class="tool-desc">Objectif précis, critère de preuve, Miroir de Valeurs, courbe de transformation, bilan exportable. Une trace réelle de ta progression.</div>
+      <div class="tool-steps"><span class="tool-step-tag">Objectif structuré</span><span class="tool-step-tag">Double courbe</span><span class="tool-step-tag">Export PDF</span><span class="tool-step-tag">Bilan J30</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- ══ TÉMOIGNAGES ════════════════════════════════════════════════════════ -->
+<section id="temoignages" class="section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Résultats réels</span>
+    <h2 class="section-title reveal reveal-delay-1">Ils se sont débloqués.</h2>
+    <p class="section-body reveal reveal-delay-2">Pas des promesses. Des histoires vraies avec des résultats concrets.</p>
+
+    <!-- Image Unsplash autour des témoignages -->
+    <div class="reveal" style="border-radius:14px;overflow:hidden;margin-bottom:20px;position:relative;">
+      <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&q=80&auto=format&fit=crop" alt="Entrepreneurs en réussite" style="width:100%;height:180px;object-fit:cover;display:block;filter:brightness(0.5);">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,4vw,28px);color:#f7f2e8;font-style:italic;line-height:1.3;">« Ces transformations ont commencé<br>par un seul appel. »</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prothésiste -->
+    <div class="temo-full reveal reveal-delay-1">
+      <div class="temo-header">
+        <div class="temo-avatar">💅</div>
+        <div><div class="temo-name">Prothésiste ongulaire</div><div class="temo-role">Cheffe d'entreprise · Secteur beauté</div></div>
+        <div class="temo-badge">✓ 2 sessions</div>
+      </div>
+      <div class="temo-body">
+        <div class="temo-bloc red"><div class="temo-bloc-label">Le blocage</div><div class="temo-bloc-text">Face à une hausse de ses charges, elle refusait d'augmenter ses tarifs par peur de perdre ses clientes. Son CA s'effondrait.</div></div>
+        <div class="temo-bloc green"><div class="temo-bloc-label">Le résultat</div><div class="temo-bloc-text">Elle a augmenté ses tarifs. Ses clientes ont suivi. Elle a évité la fermeture, reconstitué sa trésorerie et attiré une clientèle plus fidèle.</div></div>
+      </div>
+    </div>
+
+    <!-- Mathilde -->
+    <div class="temo-full reveal reveal-delay-2">
+      <div class="temo-header">
+        <div class="temo-avatar">🌱</div>
+        <div><div class="temo-name">Future thérapeute, maman solo</div><div class="temo-role">Reconversion · 2 enfants à charge</div></div>
+        <div class="temo-badge">✓ Lancée</div>
+      </div>
+      <div class="temo-body">
+        <div class="temo-bloc red"><div class="temo-bloc-label">Le blocage</div><div class="temo-bloc-text">Après sa démission, la peur de ne pas pouvoir financer sa formation (500€/mois) la paralysait complètement.</div></div>
+        <div class="temo-bloc green"><div class="temo-bloc-label">Le résultat</div><div class="temo-bloc-text">Elle a compris qu'elle se bloquait elle-même. Diplômée aujourd'hui — elle accompagne déjà ses premiers clients.</div></div>
+      </div>
+    </div>
+
+    <!-- Gilles -->
+    <div class="temo-full reveal reveal-delay-3">
+      <div class="temo-header">
+        <div class="temo-avatar">🏠</div>
+        <div><div class="temo-name">Gilles</div><div class="temo-role">Agent immobilier indépendant</div></div>
+        <div class="temo-badge">✓ 1 session 2h</div>
+      </div>
+      <div class="temo-body">
+        <div class="temo-bloc red"><div class="temo-bloc-label">Le blocage</div><div class="temo-bloc-text">Depuis l'enfance, l'impression de ne pas avoir le droit d'être totalement lui-même. Le perfectionnisme l'empêchait d'avancer.</div></div>
+        <div class="temo-bloc green"><div class="temo-bloc-label">Le résultat</div><div class="temo-bloc-text">Il a retrouvé confiance en lui — et arrêté de se battre contre lui-même pour se consacrer à son business.</div></div>
+      </div>
+      <div class="temo-quote">Après 2h de discussion, j'ai eu tellement d'éclaircissement dans les limitations que je m'imposais... toutes les choses qui marchaient pas jusqu'à aujourd'hui n'était que le fruit de mes croyances mal placées. J'ai hâte de rediscuter avec toi.</div>
+    </div>
+
+    <!-- Image entre témoignages -->
+    <div class="reveal" style="border-radius:14px;overflow:hidden;margin:20px 0;">
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80&auto=format&fit=crop" alt="Collaboration et confiance" style="width:100%;height:160px;object-fit:cover;display:block;filter:brightness(0.6) saturate(0.8);">
+    </div>
+
+    <!-- Damien & Vincent -->
+    <div class="temo-mini-grid reveal reveal-delay-4">
+      <div class="temo-mini">
+        <div class="temo-mini-name">Damien</div>
+        <div class="temo-mini-role">Message après accompagnement</div>
+        <div class="temo-mini-quote">"Je ne sais pas où j'en serais sans toi. Merci encore une fois."</div>
+      </div>
+      <div class="temo-mini">
+        <div class="temo-mini-name">Vincent</div>
+        <div class="temo-mini-role">Message après accompagnement</div>
+        <div class="temo-mini-quote">"Je suis très heureux de ce que je fais. Tu as bien choisi ta voie."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA FINAL ══════════════════════════════════════════════════════════ -->
+<section id="cta-final">
+  <div style="max-width:560px;margin:0 auto;">
+    <span class="eyebrow reveal" style="color:rgba(201,168,76,0.7);text-align:center;display:block;">Prêt à te débloquer ?</span>
+    <h2 class="cta-title reveal reveal-delay-1">
+      Ton objectif n'attend<br>que <em>toi.</em>
+    </h2>
+    <p class="cta-sub reveal reveal-delay-2">
+      Un appel de 15 minutes. Gratuit. Sans engagement.<br>
+      Franck t'aide à identifier ton blocage principal et à voir comment la méthode peut s'appliquer à ton objectif précis.
+    </p>
+    <div class="reveal reveal-delay-3" style="text-align:center;">
+      <a class="btn-primary" href="https://calendly.com/contact-racineetimpact/appel-decouverte--15min-offert" target="_blank" style="font-size:15px;padding:18px 40px;">
+        Réserver mon appel découverte — 15 min offert →
+      </a>
+      <div class="cta-trust">
+        <span class="trust-item">✓ Sans engagement</span>
+        <span class="trust-item">✓ Diagnostic personnalisé</span>
+        <span class="trust-item">✓ Résultat immédiat</span>
+      </div>
+      <div style="margin-top:24px;">
+        <a href="voie-souveraine.html" class="btn-outline" style="font-size:13px;">Ou commencer par le diagnostic gratuit →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">Racine & Impact</div>
+  <div class="footer-text">Franck · Spécialiste du Déblocage en Action · Angoulême, France</div>
+  <div style="margin-top:12px;font-size:11px;color:rgba(247,242,232,0.2);">© 2025 Racine & Impact · Tous droits réservés</div>
+</footer>
+
+<script>
+// ── NAV SCROLL ─────────────────────────────────────────────────────────────
+window.addEventListener('scroll', ()=>{
+  const nav = document.getElementById('mainNav');
+  if(nav) nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+function scrollTo(id){
+  const el = document.querySelector(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+
+// ── REVEAL ─────────────────────────────────────────────────────────────────
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ── WAVE CANVAS ─────────────────────────────────────────────────────────────
+const canvas = document.getElementById('waveCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, t=0;
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+function drawWave(){
+  ctx.clearRect(0,0,W,H);
+  for(let k=0;k<3;k++){
+    ctx.beginPath();
+    const amp=18+k*8, freq=0.008-k*0.001, spd=0.012-k*0.003, yBase=H*(0.45+k*0.1);
+    for(let x=0;x<=W;x+=3){
+      const y=yBase+Math.sin(x*freq+t*spd+k*1.2)*amp+Math.cos(x*freq*0.7+t*spd*0.8)*amp*0.5;
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=`rgba(201,168,76,${0.06-k*0.015})`;
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+  t++;
+  requestAnimationFrame(drawWave);
+}
+drawWave();
+
+// ── MUSIC ──────────────────────────────────────────────────────────────────
+let wavesAudio=null, musicOn=false;
+function initWaves(){ if(wavesAudio) return; wavesAudio=new Audio('waves.mp3'); wavesAudio.loop=true; wavesAudio.volume=0; wavesAudio.preload='auto'; }
+function toggleMusic(){
+  initWaves();
+  const btn=document.getElementById('musicBtn');
+  const inv=document.getElementById('musicInvite');
+  if(!musicOn){
+    wavesAudio.play().then(()=>{
+      musicOn=true; fadeVolume(wavesAudio,0,0.35,3000);
+      if(btn) btn.textContent='🔔';
+      if(inv) inv.style.display='none';
+    }).catch(()=>{});
+  } else {
+    fadeVolume(wavesAudio,wavesAudio.volume,0,1500,()=>{ wavesAudio.pause(); wavesAudio.currentTime=0; });
+    if(btn) btn.textContent='🔇'; musicOn=false;
+  }
+}
+function fadeVolume(audio,from,to,duration,callback){
+  const steps=40, interval=duration/steps, delta=(to-from)/steps;
+  let current=from, count=0;
+  audio.volume=Math.max(0,Math.min(1,from));
+  const timer=setInterval(()=>{
+    count++; current+=delta;
+    audio.volume=Math.max(0,Math.min(1,current));
+    if(count>=steps){ clearInterval(timer); audio.volume=Math.max(0,Math.min(1,to)); if(callback) callback(); }
+  },interval);
+}
+['click','touchstart','touchend','keydown','mousedown'].forEach(evt=>{
+  document.addEventListener(evt,()=>{
+    if(!musicOn && wavesAudio===null){ initWaves(); }
+  },{passive:true,once:true});
+});
+</script>
+</body>
+</html>
